@@ -9,6 +9,7 @@ import { useBrand, useContent, useMe } from "@/hooks/useCreatorData";
 import { useBrainFiles } from "@/hooks/useBrain";
 import { useResearchList } from "@/hooks/useResearch";
 import { formatNumber } from "@/lib/content";
+import ContentPipeline from "@/components/dashboard/ContentPipeline";
 
 function greeting() {
   const hour = new Date().getHours();
@@ -80,6 +81,8 @@ export default function Dashboard() {
           }
         />
       </section>
+
+      <ContentPipeline items={items} />
     </div>
   );
 }
