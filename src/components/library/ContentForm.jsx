@@ -2,6 +2,7 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { Loader2 } from "lucide-react";
 import ContentMeta from "@/components/library/ContentMeta";
+import MetricsFields from "@/components/library/MetricsFields";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -110,6 +111,10 @@ export default function ContentForm({
 
         <ContentMeta values={values} onChange={set} platforms={platforms} pillars={pillars} />
       </div>
+
+      {values.status === "published" && (
+        <MetricsFields values={values} onChange={set} itemId={initial?.id} />
+      )}
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>{footer}</div>
