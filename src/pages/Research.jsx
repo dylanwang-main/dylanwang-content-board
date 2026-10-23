@@ -4,7 +4,9 @@ import Panel from "@/components/kit/Panel";
 import PageScannerForm from "@/components/research/PageScannerForm";
 import ResearchCaption from "@/components/research/ResearchCaption";
 import ResearchPane from "@/components/research/ResearchPane";
+import ResearchReport from "@/components/research/ResearchReport";
 import ResearchTabs from "@/components/research/ResearchTabs";
+import RunHistory from "@/components/research/RunHistory";
 import { useResearchList } from "@/hooks/useResearch";
 
 const REPORT_TABS = ["insights", "avatars", "angles"];
@@ -16,7 +18,7 @@ export default function Research() {
 
   const selected = records.find((record) => record.id === selectedId) || records[0];
 
-  const handleStarted = (id) => {
+  const handleSelect = (id) => {
     setSelectedId(id);
     setTab("insights");
   };
@@ -33,16 +35,21 @@ export default function Research() {
         <ResearchTabs active={tab} onSelect={setTab} />
 
         <div className="mt-6">
-          {tab === "scanner" && <PageScannerForm onStarted={handleStarted} />}
+          {tab === "scanner" && <PageScannerForm onStarted={handleSelect} />}
 
           {REPORT_TABS.includes(tab) && (
             <ResearchPane isLoading={isLoading} isEmpty={records.length === 0}>
-              <ResearchCaption record={selected} />
+              <div className="space-y-6">
+                <ResearchCaption record={selected} />
+                <ResearchReport record={selected} tab={tab} />
+              </div>
             </ResearchPane>
           )}
 
           {tab === "history" && (
-            <ResearchPane isLoading={isLoading} isEmpty={records.length === 0} />
+            <ResearchPane isLoading={isLoading} isEmpty={records.length === 0}>
+              <RunHistory runs={records} selectedId={selected?.id} onSelect={handleSelect} />
+            </ResearchPane>
           )}
         </div>
       </Panel>
