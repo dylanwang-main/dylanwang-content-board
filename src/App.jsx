@@ -1,12 +1,25 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import AppLayout from '@/components/AppLayout';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
+import ForgotPassword from '@/pages/ForgotPassword';
+import ResetPassword from '@/pages/ResetPassword';
 // Add page imports here
+import Dashboard from '@/pages/Dashboard';
+import Brain from '@/pages/Brain';
+import Research from '@/pages/Research';
+import Library from '@/pages/Library';
+import Create from '@/pages/Create';
+import Performance from '@/pages/Performance';
+import Settings from '@/pages/Settings';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -34,8 +47,26 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
-      {/* Add your page Route elements here */}
-      <Route path="*" element={<PageNotFound />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+
+      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+        <Route path="/brand" element={<Navigate to="/brain" replace />} />
+
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/brain" element={<Brain />} />
+          <Route path="/research" element={<Research />} />
+          <Route path="/library" element={<Library />} />
+          <Route path="/create" element={<Create />} />
+          <Route path="/performance" element={<Performance />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
+
+        <Route path="*" element={<PageNotFound />} />
+      </Route>
     </Routes>
   );
 };
