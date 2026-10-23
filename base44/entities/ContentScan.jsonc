@@ -1,0 +1,123 @@
+{
+  "name": "ContentScan",
+  "type": "object",
+  "properties": {
+    "platform": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scanning",
+        "complete",
+        "failed"
+      ],
+      "default": "scanning"
+    },
+    "title": {
+      "type": "string"
+    },
+    "creator": {
+      "type": "string"
+    },
+    "analytics": {
+      "type": "object",
+      "properties": {
+        "views": {
+          "type": "number"
+        },
+        "likes": {
+          "type": "number"
+        },
+        "comments": {
+          "type": "number"
+        },
+        "shares": {
+          "type": "number"
+        },
+        "published_date": {
+          "type": "string"
+        },
+        "engagement_note": {
+          "type": "string"
+        }
+      }
+    },
+    "comment_analysis": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "sentiment": {
+          "type": "object",
+          "properties": {
+            "positive": {
+              "type": "number"
+            },
+            "neutral": {
+              "type": "number"
+            },
+            "negative": {
+              "type": "number"
+            }
+          }
+        },
+        "themes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notable_comments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "transcript": {
+      "type": "string"
+    },
+    "transcript_available": {
+      "type": "boolean"
+    },
+    "hook": {
+      "type": "string"
+    },
+    "why_it_works": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "platform",
+    "url"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

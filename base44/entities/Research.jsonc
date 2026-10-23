@@ -1,0 +1,171 @@
+{
+  "name": "Research",
+  "type": "object",
+  "properties": {
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "own",
+        "competitor"
+      ],
+      "default": "own"
+    },
+    "platform": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "researching",
+        "complete",
+        "failed"
+      ],
+      "default": "researching"
+    },
+    "customer_research": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "commonalities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "theme": {
+                "type": "string"
+              },
+              "percentage": {
+                "type": "number"
+              },
+              "detail": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "pains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "desires": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "objections": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "language": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "core_avatar": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "primary_desire": {
+          "type": "string"
+        },
+        "defining_experience": {
+          "type": "string"
+        },
+        "main_problems": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sub_avatars": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "primary_desire": {
+            "type": "string"
+          },
+          "defining_experience": {
+            "type": "string"
+          },
+          "main_problems": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "angles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "hook_idea": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "strength": {
+            "type": "number"
+          },
+          "evidence": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "platform",
+    "source"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

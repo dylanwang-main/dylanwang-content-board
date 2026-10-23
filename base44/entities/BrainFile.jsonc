@@ -1,0 +1,67 @@
+{
+  "name": "BrainFile",
+  "type": "object",
+  "properties": {
+    "section": {
+      "type": "string",
+      "enum": [
+        "brand",
+        "offer",
+        "ideal_client",
+        "story",
+        "teaching",
+        "course_modules",
+        "constraints"
+      ]
+    },
+    "file_name": {
+      "type": "string"
+    },
+    "file_uri": {
+      "type": "string"
+    },
+    "file_type": {
+      "type": "string"
+    },
+    "file_size": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "learning",
+        "learned",
+        "failed"
+      ],
+      "default": "learning"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "key_points": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "section",
+    "file_name",
+    "file_uri"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}
