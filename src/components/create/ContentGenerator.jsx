@@ -1,5 +1,6 @@
 import { useState } from "react";
 import FieldSelect from "@/components/kit/FieldSelect";
+import GeneratedResult from "@/components/create/GeneratedResult";
 import GeneratorFooter from "@/components/create/GeneratorFooter";
 import { FORMATS, platformOptions } from "@/lib/content";
 import { useGenerateContent } from "@/hooks/useGenerateContent";
@@ -23,6 +24,7 @@ export default function ContentGenerator({ me, brand, learnedCount }) {
   };
 
   return (
+    <>
     <form
       onSubmit={onSubmit}
       className="rounded-2xl border border-border/60 bg-card/70 p-6 sm:p-8"
@@ -64,5 +66,10 @@ export default function ContentGenerator({ me, brand, learnedCount }) {
         disabled={!isReady}
       />
     </form>
+
+    {result && !generate.isPending && (
+      <GeneratedResult result={result} className="mt-10" />
+    )}
+    </>
   );
 }
