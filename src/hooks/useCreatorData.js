@@ -38,6 +38,15 @@ export function useMe() {
   });
 }
 
+export function useSaveMe() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data) => base44.auth.updateMe(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["me"] }),
+  });
+}
+
 export function useSaveContent() {
   const queryClient = useQueryClient();
 

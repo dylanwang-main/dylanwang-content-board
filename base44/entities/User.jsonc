@@ -7,6 +7,25 @@
         "admin",
         "user"
       ]
+    },
+    "display_name": {
+      "type": "string",
+      "description": "How the creator wants to be addressed in the app"
+    },
+    "monthly_goal": {
+      "type": "number",
+      "description": "Pieces the creator aims to publish each month"
+    },
+    "platforms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The channels the creator publishes to"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "The creator's logo, shown in the sidebar and as the favicon"
     }
   },
   "required": [
