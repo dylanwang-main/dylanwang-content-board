@@ -18,7 +18,7 @@ export default function TranscriptCard({ scan }) {
         </p>
       )}
 
-      <div className="mt-4 max-h-96 overflow-y-auto whitespace-pre-wrap rounded-xl bg-background/40 p-4 text-sm leading-relaxed text-muted-foreground">
+      <div className="mt-4 max-h-96 overflow-y-auto whitespace-pre-wrap break-words rounded-xl bg-background/40 p-4 text-sm leading-relaxed text-muted-foreground">
         {scan.transcript || "No transcript found."}
       </div>
 

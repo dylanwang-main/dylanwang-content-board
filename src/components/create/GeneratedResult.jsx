@@ -45,14 +45,14 @@ export default function GeneratedResult({ result, className = "" }) {
       <div className="grid gap-5 lg:grid-cols-2">
         <Panel title="Caption">
           {result.caption && (
-            <p className="whitespace-pre-wrap text-sm leading-relaxed">{result.caption}</p>
+            <p className="whitespace-pre-wrap break-words text-sm leading-relaxed">{result.caption}</p>
           )}
           {hashtags.length > 0 && <p className="mt-4 text-sm text-primary">{hashtags.join(" ")}</p>}
         </Panel>
 
         <Panel title="Production notes">
           {result.production_notes && (
-            <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+            <p className="whitespace-pre-wrap break-words text-sm text-muted-foreground">
               {result.production_notes}
             </p>
           )}
