@@ -21,6 +21,16 @@ export function useBrand() {
   });
 }
 
+export function useSaveBrand() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }) =>
+      id ? base44.entities.Brand.update(id, data) : base44.entities.Brand.create(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["brand"] }),
+  });
+}
+
 export function useMe() {
   return useQuery({
     queryKey: ["me"],
