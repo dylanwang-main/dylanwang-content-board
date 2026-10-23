@@ -75,7 +75,7 @@ export default function Dashboard() {
         <StatCard label="Posts this week" value={postsThisWeek.length} />
         <StatCard
           label="Top post"
-          value={formatNumber(topPost?.views || 0)}
+          value={topPost ? formatNumber(topPost.views || 0) : "—"}
           hint={
             topPost ? (
               <span className="block truncate">{topPost.title}</span>
