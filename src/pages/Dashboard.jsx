@@ -10,6 +10,8 @@ import { useBrainFiles } from "@/hooks/useBrain";
 import { useResearchList } from "@/hooks/useResearch";
 import { formatNumber } from "@/lib/content";
 import ContentPipeline from "@/components/dashboard/ContentPipeline";
+import Milestones from "@/components/dashboard/Milestones";
+import Roadmap from "@/components/dashboard/Roadmap";
 
 function greeting() {
   const hour = new Date().getHours();
@@ -21,15 +23,17 @@ function greeting() {
 export default function Dashboard() {
   const { data: items = [], isLoading } = useContent();
   const { data: brand } = useBrand();
-
-  // Loaded here for the pipeline, milestones and roadmap sections coming next.
-  useMe();
-  useBrainFiles();
-  useResearchList();
+  const { data: me } = useMe();
+  const { data: brainFiles = [] } = useBrainFiles();
+  const { data: research = [] } = useResearchList();
 
   if (isLoading) return <PageLoader />;
 
   const published = items.filter((item) => item.status === "published");
+  const monthKey = format(new Date(), "yyyy-MM");
+  const publishedThisMonth = published.filter(
+    (item) => typeof item.published_date === "string" && item.published_date.startsWith(monthKey)
+  ).length;
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
   const postsThisWeek = published.filter((item) => {
     const value = item.published_date;
@@ -83,6 +87,16 @@ export default function Dashboard() {
       </section>
 
       <ContentPipeline items={items} />
+
+      <Milestones
+        items={items}
+        brainFiles={brainFiles}
+        research={research}
+        publishedThisMonth={publishedThisMonth}
+        goal={me?.monthly_goal}
+      />
+
+      <Roadmap />
     </div>
   );
 }
