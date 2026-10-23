@@ -1,20 +1,6 @@
-import { Loader2, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-function RunStatus({ status }) {
-  if (status === "researching") {
-    return (
-      <span className="inline-flex items-center gap-1.5 text-primary">
-        <Loader2 className="h-3 w-3 animate-spin" />
-        Researching…
-      </span>
-    );
-  }
-
-  if (status === "complete") return <span className="text-chart-2">Complete</span>;
-
-  return <span className="text-destructive">Failed</span>;
-}
+import RunStatusLabel from "@/components/research/RunStatusLabel";
 
 export default function RunHistoryRow({
   run,
@@ -35,7 +21,8 @@ export default function RunHistoryRow({
       <button type="button" onClick={onSelect} className="min-w-0 flex-1 text-left">
         <p className="truncate text-sm">{run.source}</p>
         <p className="mt-1 text-xs text-muted-foreground">
-          {run.platform} · {sourceType} · <RunStatus status={run.status} />
+          {run.platform} · {sourceType} ·{" "}
+          <RunStatusLabel status={run.status} runningLabel="Researching…" />
         </p>
         {isInUse && <p className="mt-1 text-xs text-primary">In use by your brain</p>}
       </button>

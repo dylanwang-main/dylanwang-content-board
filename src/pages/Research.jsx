@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PageHeader from "@/components/kit/PageHeader";
 import Panel from "@/components/kit/Panel";
+import ContentScannerTab from "@/components/research/ContentScannerTab";
 import PageScannerForm from "@/components/research/PageScannerForm";
 import ResearchCaption from "@/components/research/ResearchCaption";
 import ResearchPane from "@/components/research/ResearchPane";
@@ -36,6 +37,8 @@ export default function Research() {
 
         <div className="mt-6">
           {tab === "scanner" && <PageScannerForm onStarted={handleSelect} />}
+
+          {tab === "content" && <ContentScannerTab />}
 
           {REPORT_TABS.includes(tab) && (
             <ResearchPane isLoading={isLoading} isEmpty={records.length === 0}>
