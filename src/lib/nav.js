@@ -2,6 +2,7 @@ import {
   ChartNoAxesCombined,
   Clapperboard,
   FileSearch,
+  FileText,
   GraduationCap,
   Home,
   Settings2,
@@ -11,6 +12,7 @@ import {
 export const NAV_ITEMS = [
   { to: "/", label: "Home", short: "Home", icon: Home },
   { to: "/brain", label: "Content College AI", short: "AI", icon: GraduationCap },
+  { to: "/brain-files", label: "Brand Brain Files", short: "Files", icon: FileText },
   { to: "/research", label: "Content Research", short: "Research", icon: FileSearch },
   { to: "/library", label: "Content System", short: "System", icon: Workflow },
   { to: "/create", label: "Create Content", short: "Create", icon: Clapperboard },
