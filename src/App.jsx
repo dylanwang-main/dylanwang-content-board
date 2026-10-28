@@ -20,7 +20,6 @@ import Library from '@/pages/Library';
 import Create from '@/pages/Create';
 import Performance from '@/pages/Performance';
 import Settings from '@/pages/Settings';
-import BrainFiles from '@/pages/BrainFiles';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -59,7 +58,6 @@ const AuthenticatedApp = () => {
         <Route element={<AppLayout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/brain" element={<Brain />} />
-          <Route path="/brain-files" element={<BrainFiles />} />
           <Route path="/research" element={<Research />} />
           <Route path="/library" element={<Library />} />
           <Route path="/create" element={<Create />} />
