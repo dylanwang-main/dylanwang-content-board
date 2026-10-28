@@ -30,7 +30,7 @@ export default async function (req) {
     const token = connection && connection.accessToken;
     if (!token) {
       return Response.json(
-        { error: 'Connect TikTok in the Base44 Integrations tab first' },
+        { error: 'TikTok is not connected. Reconnect the TikTok connector, then sync again.' },
         { status: 400 }
       );
     }

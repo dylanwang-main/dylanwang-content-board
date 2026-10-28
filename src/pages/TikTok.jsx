@@ -91,7 +91,7 @@ export default function TikTok() {
             <EmptyState
               icon={Music2}
               title="No videos yet"
-              text="Connect TikTok in your Base44 Integrations tab, then press Sync now."
+              text="Press Sync now to pull your videos from TikTok."
             />
           ) : filtered.length === 0 ? (
             <EmptyState
