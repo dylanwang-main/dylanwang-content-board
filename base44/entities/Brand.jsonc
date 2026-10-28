@@ -26,6 +26,12 @@
         "type": "string"
       }
     },
+    "platforms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "colors": {
       "type": "array",
       "items": {

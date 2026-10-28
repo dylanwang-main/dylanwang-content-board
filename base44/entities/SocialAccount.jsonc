@@ -1,0 +1,63 @@
+{
+  "name": "SocialAccount",
+  "type": "object",
+  "properties": {
+    "platform": {
+      "type": "string",
+      "enum": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ]
+    },
+    "handle": {
+      "type": "string"
+    },
+    "follower_count": {
+      "type": "number",
+      "default": 0
+    },
+    "following_count": {
+      "type": "number",
+      "default": 0
+    },
+    "media_count": {
+      "type": "number",
+      "default": 0
+    },
+    "profile_url": {
+      "type": "string"
+    },
+    "last_synced": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "platform"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

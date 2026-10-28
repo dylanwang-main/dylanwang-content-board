@@ -1,5 +1,6 @@
 import PageHeader from "@/components/kit/PageHeader";
 import PageLoader from "@/components/kit/PageLoader";
+import ConnectedChannels from "@/components/settings/ConnectedChannels";
 import SettingsForm from "@/components/settings/SettingsForm";
 import { useMe } from "@/hooks/useCreatorData";
 
@@ -17,8 +18,9 @@ export default function Settings() {
       {isLoading || !me ? (
         <PageLoader />
       ) : (
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-3xl space-y-6">
           <SettingsForm me={me} />
+          <ConnectedChannels />
         </div>
       )}
     </div>

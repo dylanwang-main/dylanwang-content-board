@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Feather, Lightbulb } from "lucide-react";
 import { format, parseISO, startOfWeek } from "date-fns";
@@ -8,8 +9,10 @@ import StatCard from "@/components/kit/StatCard";
 import { useBrand, useContent, useMe } from "@/hooks/useCreatorData";
 import { useBrainFiles } from "@/hooks/useBrain";
 import { useResearchList } from "@/hooks/useResearch";
-import { formatNumber } from "@/lib/content";
+import { formatNumber, platformOptions } from "@/lib/content";
+import ContentDialog from "@/components/library/ContentDialog";
 import ContentPipeline from "@/components/dashboard/ContentPipeline";
+import SocialFollowing from "@/components/dashboard/SocialFollowing";
 import Milestones from "@/components/dashboard/Milestones";
 import Roadmap from "@/components/dashboard/Roadmap";
 
@@ -26,6 +29,7 @@ export default function Dashboard() {
   const { data: me } = useMe();
   const { data: brainFiles = [] } = useBrainFiles();
   const { data: research = [] } = useResearchList();
+  const [selected, setSelected] = useState(null);
 
   if (isLoading) return <PageLoader />;
 
@@ -44,6 +48,9 @@ export default function Dashboard() {
     (best, item) => ((item.views || 0) > (best?.views || 0) ? item : best),
     null
   );
+
+  const platforms = platformOptions(me);
+  const pillars = brand?.pillars || [];
 
   return (
     <div className="space-y-10">
@@ -86,7 +93,9 @@ export default function Dashboard() {
         />
       </section>
 
-      <ContentPipeline items={items} />
+      <SocialFollowing />
+
+      <ContentPipeline items={items} onOpenItem={(item) => setSelected(item)} />
 
       <Milestones
         items={items}
@@ -97,6 +106,15 @@ export default function Dashboard() {
       />
 
       <Roadmap />
+
+      {selected && (
+        <ContentDialog
+          item={selected}
+          onClose={() => setSelected(null)}
+          platforms={platforms}
+          pillars={pillars}
+        />
+      )}
     </div>
   );
 }

@@ -1,0 +1,133 @@
+{
+  "name": "Outlier",
+  "type": "object",
+  "properties": {
+    "platform": {
+      "type": "string",
+      "enum": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ]
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "thumbnail_url": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "caption": {
+      "type": "string"
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "short_form",
+        "long_form"
+      ],
+      "default": "short_form"
+    },
+    "published_date": {
+      "type": "string"
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "views": {
+          "type": "number"
+        },
+        "likes": {
+          "type": "number"
+        },
+        "comments": {
+          "type": "number"
+        },
+        "shares": {
+          "type": "number"
+        }
+      }
+    },
+    "engagement_score": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "detected",
+        "dissecting",
+        "dissected",
+        "failed"
+      ],
+      "default": "detected"
+    },
+    "hook": {
+      "type": "string"
+    },
+    "body_analysis": {
+      "type": "string"
+    },
+    "drop_off_points": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "retention_points": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "why_it_worked": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "full_transcript": {
+      "type": "string"
+    },
+    "variations_generated": {
+      "type": "boolean",
+      "default": false
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "platform",
+    "source_url"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

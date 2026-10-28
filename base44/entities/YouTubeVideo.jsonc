@@ -1,0 +1,76 @@
+{
+  "name": "YouTubeVideo",
+  "type": "object",
+  "properties": {
+    "video_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "thumbnail_url": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "published_at": {
+      "type": "string"
+    },
+    "duration_seconds": {
+      "type": "number",
+      "default": 0
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "short_form",
+        "long_form"
+      ],
+      "default": "short_form"
+    },
+    "view_count": {
+      "type": "number",
+      "default": 0
+    },
+    "like_count": {
+      "type": "number",
+      "default": 0
+    },
+    "comment_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "video_id"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

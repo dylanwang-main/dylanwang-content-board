@@ -58,6 +58,9 @@
     "saves": {
       "type": "number",
       "default": 0
+    },
+    "youtube_plan": {
+      "type": "object"
     }
   },
   "required": [

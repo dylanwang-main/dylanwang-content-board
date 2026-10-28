@@ -1,0 +1,98 @@
+{
+  "name": "TikTokMedia",
+  "type": "object",
+  "properties": {
+    "tt_id": {
+      "type": "string"
+    },
+    "video_description": {
+      "type": "string"
+    },
+    "share_url": {
+      "type": "string"
+    },
+    "cover_image_url": {
+      "type": "string"
+    },
+    "create_time": {
+      "type": "string"
+    },
+    "duration": {
+      "type": "number",
+      "default": 0
+    },
+    "view_count": {
+      "type": "number",
+      "default": 0
+    },
+    "like_count": {
+      "type": "number",
+      "default": 0
+    },
+    "comment_count": {
+      "type": "number",
+      "default": 0
+    },
+    "share_count": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "synced",
+        "analyzing",
+        "analyzed",
+        "failed"
+      ],
+      "default": "synced"
+    },
+    "transcript": {
+      "type": "string"
+    },
+    "hook": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "why_it_works": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tt_id",
+    "share_url"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

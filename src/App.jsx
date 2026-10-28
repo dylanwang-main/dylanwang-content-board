@@ -20,6 +20,10 @@ import Library from '@/pages/Library';
 import Create from '@/pages/Create';
 import Performance from '@/pages/Performance';
 import Settings from '@/pages/Settings';
+import Instagram from '@/pages/Instagram';
+import TikTok from '@/pages/TikTok';
+import YouTube from '@/pages/YouTube';
+import Outliers from '@/pages/Outliers';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -61,6 +65,10 @@ const AuthenticatedApp = () => {
           <Route path="/research" element={<Research />} />
           <Route path="/library" element={<Library />} />
           <Route path="/create" element={<Create />} />
+          <Route path="/instagram" element={<Instagram />} />
+          <Route path="/tiktok" element={<TikTok />} />
+          <Route path="/youtube" element={<YouTube />} />
+          <Route path="/outliers" element={<Outliers />} />
           <Route path="/performance" element={<Performance />} />
           <Route path="/settings" element={<Settings />} />
         </Route>

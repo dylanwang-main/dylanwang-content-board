@@ -2,7 +2,7 @@ import { Droppable } from "@hello-pangea/dnd";
 import PipelineCard from "@/components/dashboard/PipelineCard";
 import { STATUS_BARS } from "@/lib/content";
 
-export default function PipelineColumn({ status, label, items }) {
+export default function PipelineColumn({ status, label, items, onOpen }) {
   return (
     <Droppable droppableId={status}>
       {(provided, snapshot) => (
@@ -29,7 +29,7 @@ export default function PipelineColumn({ status, label, items }) {
             )}
 
             {items.map((item, index) => (
-              <PipelineCard key={item.id} item={item} index={index} />
+              <PipelineCard key={item.id} item={item} index={index} onOpen={onOpen} />
             ))}
 
             {provided.placeholder}

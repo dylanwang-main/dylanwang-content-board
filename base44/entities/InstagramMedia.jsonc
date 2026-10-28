@@ -1,0 +1,93 @@
+{
+  "name": "InstagramMedia",
+  "type": "object",
+  "properties": {
+    "ig_id": {
+      "type": "string"
+    },
+    "media_type": {
+      "type": "string"
+    },
+    "caption": {
+      "type": "string"
+    },
+    "permalink": {
+      "type": "string"
+    },
+    "thumbnail_url": {
+      "type": "string"
+    },
+    "media_url": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "like_count": {
+      "type": "number",
+      "default": 0
+    },
+    "comments_count": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "synced",
+        "analyzing",
+        "analyzed",
+        "failed"
+      ],
+      "default": "synced"
+    },
+    "transcript": {
+      "type": "string"
+    },
+    "hook": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "why_it_works": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "ig_id",
+    "media_type",
+    "permalink"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}
