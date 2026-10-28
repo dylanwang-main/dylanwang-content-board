@@ -1,4 +1,13 @@
-import { format, parseISO, startOfDay, startOfWeek, subDays, subWeeks } from "date-fns";
+import {
+  differenceInCalendarWeeks,
+  format,
+  parseISO,
+  startOfDay,
+  startOfWeek,
+  subDays,
+  subWeeks,
+} from "date-fns";
+import { inDateRange } from "@/lib/dateRange";
 
 export function toDate(value) {
   if (!value) return null;
@@ -7,11 +16,7 @@ export function toDate(value) {
 }
 
 export function inRange(date, days) {
-  const parsed = toDate(date);
-  if (!parsed) return false;
-
-  const cutoff = startOfDay(subDays(new Date(), days));
-  return parsed >= cutoff;
+  return inDateRange(date, days);
 }
 
 export function dayKey(date) {
@@ -24,31 +29,7 @@ export function weekKey(date) {
   return parsed ? format(startOfWeek(parsed, { weekStartsOn: 1 }), "yyyy-MM-dd") : "";
 }
 
-export function buildSeries(posts, days) {
-  const grain = days >= 90 ? "week" : "day";
-  const buckets = new Map();
-  const keys = [];
-  const today = startOfDay(new Date());
-
-  if (grain === "day") {
-    for (let index = days - 1; index >= 0; index -= 1) {
-      const date = subDays(today, index);
-      const key = format(date, "yyyy-MM-dd");
-      buckets.set(key, { key, label: format(date, "MMM d"), views: 0 });
-      keys.push(key);
-    }
-  } else {
-    const start = startOfWeek(today, { weekStartsOn: 1 });
-    const weeks = Math.ceil(days / 7);
-
-    for (let index = weeks - 1; index >= 0; index -= 1) {
-      const date = subWeeks(start, index);
-      const key = format(date, "yyyy-MM-dd");
-      buckets.set(key, { key, label: format(date, "MMM d"), views: 0 });
-      keys.push(key);
-    }
-  }
-
+function fillSeries(buckets, keys, posts, grain) {
   (posts || []).forEach((post) => {
     if (post.views === null || post.views === undefined) return;
 
@@ -58,6 +39,50 @@ export function buildSeries(posts, days) {
   });
 
   return keys.map((key) => buckets.get(key));
+}
+
+export function buildSeries(posts, days) {
+  const buckets = new Map();
+  const keys = [];
+  const today = startOfDay(new Date());
+
+  if (days === 7 || days === 30) {
+    for (let index = days - 1; index >= 0; index -= 1) {
+      const date = subDays(today, index);
+      const key = format(date, "yyyy-MM-dd");
+      buckets.set(key, { key, label: format(date, "MMM d"), views: 0 });
+      keys.push(key);
+    }
+
+    return fillSeries(buckets, keys, posts, "day");
+  }
+
+  const currentWeek = startOfWeek(today, { weekStartsOn: 1 });
+  let oldest = currentWeek;
+
+  if (days === "all") {
+    (posts || []).forEach((post) => {
+      const date = toDate(post.date);
+      if (!date) return;
+
+      const week = startOfWeek(date, { weekStartsOn: 1 });
+      if (week < oldest) oldest = week;
+    });
+  } else {
+    const weeks = days === 182 ? 26 : Math.ceil(Number(days) / 7);
+    oldest = subWeeks(currentWeek, weeks - 1);
+  }
+
+  const count = differenceInCalendarWeeks(currentWeek, oldest, { weekStartsOn: 1 }) + 1;
+
+  for (let index = count - 1; index >= 0; index -= 1) {
+    const date = subWeeks(currentWeek, index);
+    const key = format(date, "yyyy-MM-dd");
+    buckets.set(key, { key, label: format(date, "MMM d"), views: 0 });
+    keys.push(key);
+  }
+
+  return fillSeries(buckets, keys, posts, "week");
 }
 
 export function channelRate(likes, comments, shares, views) {

@@ -43,6 +43,31 @@
     "comment_count": {
       "type": "number",
       "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "synced",
+        "analyzing",
+        "analyzed",
+        "failed"
+      ],
+      "default": "synced"
+    },
+    "hook": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "why_it_works": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "error": {
+      "type": "string"
     }
   },
   "required": [

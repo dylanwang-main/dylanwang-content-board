@@ -7,10 +7,12 @@ export function useYouTubeVideos() {
     queryFn: async () => {
       const page = await base44.entities.YouTubeVideo.list({
         sort: "-published_at",
-        limit: 200,
+        limit: 500,
       });
       return page.items;
     },
+    refetchInterval: (query) =>
+      (query.state.data || []).some((item) => item.status === "analyzing") ? 5000 : false,
   });
 }
 
@@ -31,6 +33,24 @@ export function useSyncYouTube() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["youtube"] });
       queryClient.invalidateQueries({ queryKey: ["social-accounts"] });
+    },
+  });
+}
+
+export function useAnalyzeYouTubeVideo() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (recordId) => {
+      await base44.entities.YouTubeVideo.update(recordId, { status: "analyzing" });
+      queryClient.invalidateQueries({ queryKey: ["youtube"] });
+
+      base44.functions
+        .invoke("analyzeYouTubeVideo", { video_record_id: recordId })
+        .catch(() => {})
+        .finally(() => queryClient.invalidateQueries({ queryKey: ["youtube"] }));
+
+      return recordId;
     },
   });
 }

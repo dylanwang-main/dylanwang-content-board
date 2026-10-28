@@ -2,12 +2,12 @@ import { useState } from "react";
 import PageLoader from "@/components/kit/PageLoader";
 import ChannelBreakdown from "@/components/performance/channels/ChannelBreakdown";
 import ChannelConnections from "@/components/performance/channels/ChannelConnections";
-import ChannelRangeFilter from "@/components/performance/channels/ChannelRangeFilter";
 import ChannelStats from "@/components/performance/channels/ChannelStats";
 import ChannelTopPosts from "@/components/performance/channels/ChannelTopPosts";
 import ChannelViewsChart from "@/components/performance/channels/ChannelViewsChart";
 import InstagramStats from "@/components/performance/channels/InstagramStats";
 import OutliersSection from "@/components/performance/channels/OutliersSection";
+import DateRangeFilter from "@/components/shared/DateRangeFilter";
 import { useChannelMetrics } from "@/hooks/useChannelMetrics";
 
 export default function ChannelsSection() {
@@ -24,7 +24,7 @@ export default function ChannelsSection() {
           </p>
         </div>
 
-        <ChannelRangeFilter days={days} onChange={setDays} />
+        <DateRangeFilter value={days} onChange={setDays} />
       </div>
 
       {metrics.loading ? (
