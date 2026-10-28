@@ -3,6 +3,7 @@ import EmptyState from "@/components/kit/EmptyState";
 import PageHeader from "@/components/kit/PageHeader";
 import PageLoader from "@/components/kit/PageLoader";
 import GroupPanel from "@/components/performance/GroupPanel";
+import ChannelsSection from "@/components/performance/channels/ChannelsSection";
 import PerformanceStats from "@/components/performance/PerformanceStats";
 import TopPiecesPanel from "@/components/performance/TopPiecesPanel";
 import ViewsTrendPanel from "@/components/performance/ViewsTrendPanel";
@@ -47,6 +48,8 @@ export default function Performance() {
           <TopPiecesPanel items={published} />
         </div>
       )}
+
+      <ChannelsSection />
     </div>
   );
 }

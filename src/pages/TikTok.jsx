@@ -1,5 +1,6 @@
-import { Music2, RefreshCw } from "lucide-react";
+import { Music2, RefreshCw, TrendingUp } from "lucide-react";
 import { format, parseISO } from "date-fns";
+import { useNavigate } from "react-router-dom";
 import EmptyState from "@/components/kit/EmptyState";
 import PageHeader from "@/components/kit/PageHeader";
 import PageLoader from "@/components/kit/PageLoader";
@@ -7,6 +8,7 @@ import StatCard from "@/components/kit/StatCard";
 import TikTokMediaCard from "@/components/tiktok/TikTokMediaCard";
 import { Button } from "@/components/ui/button";
 import { useSyncTikTok, useTikTokMedia } from "@/hooks/useTikTok";
+import { useDetectOutliers } from "@/hooks/useOutliers";
 import { useSocialAccounts } from "@/hooks/useSocialAccounts";
 import { formatNumber } from "@/lib/content";
 
@@ -20,6 +22,13 @@ export default function TikTok() {
   const { data: media = [], isLoading } = useTikTokMedia();
   const { data: accounts = [] } = useSocialAccounts();
   const sync = useSyncTikTok();
+  const detect = useDetectOutliers();
+  const navigate = useNavigate();
+
+  const findOutliers = async () => {
+    await detect.mutateAsync().catch(() => {});
+    navigate("/outliers");
+  };
 
   const account = accounts.find((row) => (row.platform || "").toLowerCase() === "tiktok");
 
@@ -34,10 +43,22 @@ export default function TikTok() {
         title="Your TikTok"
         description="Sync your videos and see why your best ones work."
         action={
-          <Button onClick={() => sync.mutate()} disabled={sync.isPending} className="rounded-full">
-            <RefreshCw className={sync.isPending ? "animate-spin" : undefined} />
-            {sync.isPending ? "Syncing…" : "Sync now"}
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={findOutliers}
+              disabled={detect.isPending}
+              className="rounded-full"
+            >
+              <TrendingUp />
+              {detect.isPending ? "Searching…" : "Find outliers"}
+            </Button>
+
+            <Button onClick={() => sync.mutate()} disabled={sync.isPending} className="rounded-full">
+              <RefreshCw className={sync.isPending ? "animate-spin" : undefined} />
+              {sync.isPending ? "Syncing…" : "Sync now"}
+            </Button>
+          </div>
         }
       />
 
