@@ -7,7 +7,7 @@ export function useInstagramMedia() {
     queryFn: async () => {
       const page = await base44.entities.InstagramMedia.list({
         sort: "-timestamp",
-        limit: 200,
+        limit: 500,
       });
       return page.items;
     },

@@ -46,7 +46,7 @@ export default function ChannelViewsChart({ series, days }) {
       </div>
 
       <p className="mt-2 text-xs text-muted-foreground">
-        TikTok and YouTube views, per {days >= 90 ? "week" : "day"}.
+        TikTok and YouTube views, per {days === "all" || days >= 90 ? "week" : "day"}.
       </p>
     </Panel>
   );

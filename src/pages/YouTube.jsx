@@ -31,7 +31,7 @@ export default function YouTube() {
             Pipeline
           </TabsTrigger>
           <TabsTrigger value="videos" className="rounded-full px-4">
-            Videos
+            All videos
           </TabsTrigger>
         </TabsList>
 

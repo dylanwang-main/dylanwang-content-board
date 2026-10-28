@@ -53,28 +53,42 @@ export default async function (req) {
     let videos = [];
 
     if (uploads) {
-      const playlistRes = await fetch(
-        'https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50' +
-          `&playlistId=${uploads}&key=${key}`,
-        { signal: AbortSignal.timeout(15000) }
-      );
-      const playlist = await playlistRes.json();
+      const ids = [];
+      let pageToken = '';
 
-      if (!playlistRes.ok || (playlist.error && playlist.error.message)) {
-        return Response.json(
-          { error: 'YouTube sync failed: ' + ((playlist.error && playlist.error.message) || 'request failed') },
-          { status: 502 }
-        );
+      while (ids.length < 500) {
+        const url =
+          'https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50' +
+          `&playlistId=${uploads}&key=${key}` +
+          (pageToken ? `&pageToken=${encodeURIComponent(pageToken)}` : '');
+
+        const playlistRes = await fetch(url, { signal: AbortSignal.timeout(15000) });
+        const playlist = await playlistRes.json();
+
+        if (!playlistRes.ok || (playlist.error && playlist.error.message)) {
+          return Response.json(
+            { error: 'YouTube sync failed: ' + ((playlist.error && playlist.error.message) || 'request failed') },
+            { status: 502 }
+          );
+        }
+
+        (playlist.items || []).forEach((item) => {
+          const videoId = item.contentDetails && item.contentDetails.videoId;
+          if (videoId) ids.push(videoId);
+        });
+
+        pageToken = playlist.nextPageToken || '';
+        if (!pageToken) break;
       }
 
-      const ids = (playlist.items || [])
-        .map((item) => item.contentDetails && item.contentDetails.videoId)
-        .filter(Boolean);
+      const uniqueIds = Array.from(new Set(ids)).slice(0, 500);
 
-      if (ids.length) {
+      for (let index = 0; index < uniqueIds.length; index += 50) {
+        const batch = uniqueIds.slice(index, index + 50);
+
         const videosRes = await fetch(
           'https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails' +
-            `&id=${ids.join(',')}&key=${key}`,
+            `&id=${batch.join(',')}&key=${key}`,
           { signal: AbortSignal.timeout(15000) }
         );
         const videosData = await videosRes.json();
@@ -86,7 +100,7 @@ export default async function (req) {
           );
         }
 
-        videos = videosData.items || [];
+        videos.push(...(videosData.items || []));
       }
     }
 

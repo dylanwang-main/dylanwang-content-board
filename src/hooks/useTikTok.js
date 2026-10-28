@@ -7,7 +7,7 @@ export function useTikTokMedia() {
     queryFn: async () => {
       const page = await base44.entities.TikTokMedia.list({
         sort: "-create_time",
-        limit: 200,
+        limit: 500,
       });
       return page.items;
     },

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Music2, RefreshCw, TrendingUp } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
@@ -6,11 +7,13 @@ import PageHeader from "@/components/kit/PageHeader";
 import PageLoader from "@/components/kit/PageLoader";
 import StatCard from "@/components/kit/StatCard";
 import TikTokMediaCard from "@/components/tiktok/TikTokMediaCard";
+import DateRangeFilter from "@/components/shared/DateRangeFilter";
 import { Button } from "@/components/ui/button";
 import { useSyncTikTok, useTikTokMedia } from "@/hooks/useTikTok";
 import { useDetectOutliers } from "@/hooks/useOutliers";
 import { useSocialAccounts } from "@/hooks/useSocialAccounts";
 import { formatNumber } from "@/lib/content";
+import { inDateRange } from "@/lib/dateRange";
 
 function syncedLabel(value) {
   if (!value) return null;
@@ -32,8 +35,11 @@ export default function TikTok() {
 
   const account = accounts.find((row) => (row.platform || "").toLowerCase() === "tiktok");
 
-  const views = media.reduce((sum, item) => sum + (item.view_count || 0), 0);
-  const likes = media.reduce((sum, item) => sum + (item.like_count || 0), 0);
+  const [dateRange, setDateRange] = useState("all");
+  const filtered = media.filter((item) => inDateRange(item.create_time, dateRange));
+
+  const views = filtered.reduce((sum, item) => sum + (item.view_count || 0), 0);
+  const likes = filtered.reduce((sum, item) => sum + (item.like_count || 0), 0);
   const lastSynced = syncedLabel(account?.last_synced);
 
   return (
@@ -62,6 +68,8 @@ export default function TikTok() {
         }
       />
 
+      <DateRangeFilter value={dateRange} onChange={setDateRange} />
+
       {sync.isError && <p className="text-sm text-destructive">{sync.error.message}</p>}
 
       {isLoading ? (
@@ -70,7 +78,7 @@ export default function TikTok() {
         <>
           <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             <StatCard label="Followers" value={formatNumber(account?.follower_count)} />
-            <StatCard label="Videos" value={formatNumber(media.length)} />
+            <StatCard label="Videos" value={formatNumber(filtered.length)} />
             <StatCard label="Views" value={formatNumber(views)} />
             <StatCard label="Likes" value={formatNumber(likes)} />
           </section>
@@ -85,9 +93,15 @@ export default function TikTok() {
               title="No videos yet"
               text="Connect TikTok in your Base44 Integrations tab, then press Sync now."
             />
+          ) : filtered.length === 0 ? (
+            <EmptyState
+              icon={Music2}
+              title="No videos in this range"
+              text="Pick a longer range or All content."
+            />
           ) : (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-              {media.map((item) => (
+              {filtered.map((item) => (
                 <TikTokMediaCard key={item.id} item={item} />
               ))}
             </div>

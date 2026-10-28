@@ -46,7 +46,7 @@ export default async function (req) {
       `https://graph.instagram.com/me/media?fields=${MEDIA_FIELDS}` +
       `&limit=50&access_token=${encodeURIComponent(token)}`;
 
-    while (next && media.length < 200) {
+    while (next && media.length < 500) {
       const pageRes = await fetch(next, { signal: AbortSignal.timeout(15000) });
       const page = await pageRes.json();
       if (!pageRes.ok || page.error) {
@@ -59,7 +59,7 @@ export default async function (req) {
       next = page.paging && page.paging.next ? page.paging.next : null;
     }
 
-    const items = media.slice(0, 200);
+    const items = media.slice(0, 500);
 
     await upsertByKey(base44, 'InstagramMedia', 'ig_id', items, (item) => ({
       ig_id: item.id,

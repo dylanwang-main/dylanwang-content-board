@@ -56,7 +56,7 @@ export default async function (req) {
     const videos = [];
     let cursor = null;
 
-    while (videos.length < 100) {
+    while (videos.length < 500) {
       const body = { max_count: 20 };
       if (cursor) body.cursor = cursor;
 
@@ -86,7 +86,7 @@ export default async function (req) {
       cursor = pageData.cursor;
     }
 
-    const items = videos.slice(0, 100);
+    const items = videos.slice(0, 500);
 
     await upsertByKey(base44, 'TikTokMedia', 'tt_id', items, (video) => ({
       tt_id: video.id,
