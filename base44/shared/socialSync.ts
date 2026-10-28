@@ -56,15 +56,22 @@ export async function upsertByKey(base44, entityName, keyField, items, mapItem) 
     if (value) byKey.set(value, record);
   });
 
-  for (const batch of chunk(items, 6)) {
-    await Promise.allSettled(
-      batch.map((item) => {
-        const data = mapItem(item);
-        const found = byKey.get(data[keyField]);
-        return found
-          ? base44.entities[entityName].update(found.id, data)
-          : base44.entities[entityName].create({ ...data, status: 'synced' });
-      })
-    );
+  const creates = [];
+  const updates = [];
+
+  items.forEach((item) => {
+    const data = mapItem(item);
+    const found = byKey.get(data[keyField]);
+
+    if (found) updates.push({ ...data, id: found.id });
+    else creates.push({ ...data, status: 'synced' });
+  });
+
+  for (const batch of chunk(creates, 100)) {
+    await base44.entities[entityName].bulkCreate(batch);
+  }
+
+  for (const batch of chunk(updates, 100)) {
+    await base44.entities[entityName].bulkUpdate(batch);
   }
 }

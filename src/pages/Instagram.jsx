@@ -91,7 +91,7 @@ export default function Instagram() {
             <EmptyState
               icon={Camera}
               title="No posts yet"
-              text="Connect Instagram in your Base44 Integrations tab, then press Sync now."
+              text="Press Sync now to pull your profile and posts from the connected Instagram Business account."
             />
           ) : filtered.length === 0 ? (
             <EmptyState

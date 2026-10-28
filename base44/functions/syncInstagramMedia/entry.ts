@@ -24,7 +24,7 @@ export default async function (req) {
     const token = connection && connection.accessToken;
     if (!token) {
       return Response.json(
-        { error: 'Connect Instagram in the Base44 Integrations tab first' },
+        { error: 'Instagram is not connected yet. Connect the Instagram Business account, then press Sync now.' },
         { status: 400 }
       );
     }
