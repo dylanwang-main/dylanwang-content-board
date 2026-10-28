@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
+import { analyzeWithLLM, markAnalysisFailed } from '../../shared/socialSync.ts';
 
 export default async function (req) {
   const base44 = createClientFromRequest(req);
@@ -45,18 +46,7 @@ export default async function (req) {
       'summary (2 to 3 sentences on what the post says and does), and why_it_works ' +
       '(3 to 5 specific reasons it performs or does not). Never invent details that are not in the caption or transcript.';
 
-    const analysis = await base44.asServiceRole.integrations.Core.InvokeLLM({
-      prompt,
-      response_json_schema: {
-        type: 'object',
-        properties: {
-          hook: { type: 'string' },
-          summary: { type: 'string' },
-          why_it_works: { type: 'array', items: { type: 'string' } },
-        },
-        required: ['hook', 'summary', 'why_it_works'],
-      },
-    });
+    const analysis = await analyzeWithLLM(base44, prompt, false);
 
     const updated = await base44.entities.InstagramMedia.update(mediaId, {
       transcript: transcript || '',
@@ -69,16 +59,7 @@ export default async function (req) {
 
     return Response.json({ media: updated });
   } catch (error) {
-    if (media && media.id) {
-      try {
-        await base44.entities.InstagramMedia.update(media.id, {
-          status: 'failed',
-          error: 'Analysis could not be completed',
-        });
-      } catch (inner) {
-        // best effort
-      }
-    }
+    if (media && media.id) await markAnalysisFailed(base44, 'InstagramMedia', media.id);
     return Response.json({ error: error.message }, { status: 500 });
   }
 }
