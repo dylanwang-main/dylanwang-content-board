@@ -13,7 +13,7 @@ export default function GuestBanner() {
         <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" strokeWidth={1.5} />
         <span>
           <span className="font-medium text-foreground">You're in a demo workspace.</span> It's filled with sample
-          data, private to you, and resets after 7 days.
+          data, private to you, and resets after 24 hours.
         </span>
       </p>
       <div className="flex shrink-0 gap-3">
