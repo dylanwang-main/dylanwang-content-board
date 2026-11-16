@@ -43,6 +43,12 @@ export const AuthProvider = ({ children }) => {
     return guestRequest.current;
   }, []);
 
+  // Explicit "Explore the demo" button: throws so the page can show the error.
+  const signInAsGuest = useCallback(async () => {
+    setGuestError(null);
+    await api.auth.signInAsGuest();
+  }, []);
+
   const isGuest = Boolean(session?.user?.is_anonymous);
 
   const logout = async () => {
@@ -60,6 +66,7 @@ export const AuthProvider = ({ children }) => {
         isLoadingAuth,
         guestError,
         ensureGuest,
+        signInAsGuest,
         logout,
       }}
     >
