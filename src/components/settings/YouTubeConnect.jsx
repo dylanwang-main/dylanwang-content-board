@@ -61,7 +61,7 @@ export default function YouTubeConnect() {
       </div>
 
       <p className="mt-3 text-xs text-muted-foreground">
-        Needs a YouTube Data API v3 key saved as the YOUTUBE_API_KEY secret in your app settings.
+        Needs a YouTube Data API v3 key, added under "AI and API keys" above.
       </p>
     </ChannelCard>
   );

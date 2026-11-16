@@ -69,6 +69,11 @@ export function makeEntity(table, injected) {
     create: (data) => run(c().from(table).insert(data).select().single()),
     update: (id, data) => run(c().from(table).update(data).eq('id', id).select().single()),
     delete: (id) => run(c().from(table).delete().eq('id', id)),
+    // Used by the social sync functions to write many rows at once.
+    bulkCreate: (rows) => (rows.length ? run(c().from(table).insert(rows).select()) : Promise.resolve([])),
+    // Each row carries its id; existing rows are updated in place.
+    bulkUpdate: (rows) =>
+      rows.length ? run(c().from(table).upsert(rows, { onConflict: 'id' }).select()) : Promise.resolve([]),
   };
 }
 

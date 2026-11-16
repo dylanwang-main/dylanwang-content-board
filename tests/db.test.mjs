@@ -59,3 +59,16 @@ test('auth.me merges profile and returns null when signed out', async () => {
   assert.equal(await makeAuth(c).me(), null);
 });
 
+
+test('bulkCreate inserts many rows; bulkUpdate upserts on id', async () => {
+  const c = fakeClient({ data: [], error: null });
+  const e = makeEntity('youtube_videos', c);
+  await e.bulkCreate([{ video_id: 'a' }, { video_id: 'b' }]);
+  assert.deepEqual(c.calls[1], ['insert', [{ video_id: 'a' }, { video_id: 'b' }]]);
+  c.calls.length = 0;
+  await e.bulkUpdate([{ id: '1', view_count: 5 }]);
+  assert.deepEqual(c.calls[1], ['upsert', [{ id: '1', view_count: 5 }], { onConflict: 'id' }]);
+  c.calls.length = 0;
+  assert.deepEqual(await e.bulkCreate([]), []);
+  assert.equal(c.calls.length, 0);
+});

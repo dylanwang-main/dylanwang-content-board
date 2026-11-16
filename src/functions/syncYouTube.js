@@ -21,7 +21,7 @@ export default async function (req) {
     const key = apiKey();
     if (!key) {
       return Response.json(
-        { error: 'Add your YOUTUBE_API_KEY secret in the app settings first' },
+        { error: 'Add your YouTube Data API key in Settings first' },
         { status: 400 }
       );
     }
