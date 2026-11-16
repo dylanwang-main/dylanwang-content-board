@@ -59,6 +59,7 @@ create index ${table}_owner_created_idx on public.${table} (created_by_id, creat
 create trigger ${table}_touch before update on public.${table}
   for each row execute function public.touch_updated_date();
 alter table public.${table} enable row level security;
+grant select, insert, update, delete on public.${table} to authenticated;
 create policy "${table}_own_select" on public.${table} for select using (created_by_id = auth.uid());
 create policy "${table}_own_insert" on public.${table} for insert with check (created_by_id = auth.uid());
 create policy "${table}_own_update" on public.${table} for update using (created_by_id = auth.uid()) with check (created_by_id = auth.uid());
@@ -94,6 +95,9 @@ create table public.profiles (
 create trigger profiles_touch before update on public.profiles
   for each row execute function public.touch_updated_date();
 alter table public.profiles enable row level security;
+-- Explicit grants: works whether or not "Automatically expose new tables" is on.
+-- Only signed-in users get access; the anon role gets nothing.
+grant select, insert, update on public.profiles to authenticated;
 create policy "profiles_own_select" on public.profiles for select using (id = auth.uid());
 create policy "profiles_own_insert" on public.profiles for insert with check (id = auth.uid());
 create policy "profiles_own_update" on public.profiles for update using (id = auth.uid()) with check (id = auth.uid());

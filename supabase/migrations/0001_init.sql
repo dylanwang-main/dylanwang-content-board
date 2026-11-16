@@ -26,6 +26,9 @@ create table public.profiles (
 create trigger profiles_touch before update on public.profiles
   for each row execute function public.touch_updated_date();
 alter table public.profiles enable row level security;
+-- Explicit grants: works whether or not "Automatically expose new tables" is on.
+-- Only signed-in users get access; the anon role gets nothing.
+grant select, insert, update on public.profiles to authenticated;
 create policy "profiles_own_select" on public.profiles for select using (id = auth.uid());
 create policy "profiles_own_insert" on public.profiles for insert with check (id = auth.uid());
 create policy "profiles_own_update" on public.profiles for update using (id = auth.uid()) with check (id = auth.uid());
@@ -69,6 +72,7 @@ create index brain_files_owner_created_idx on public.brain_files (created_by_id,
 create trigger brain_files_touch before update on public.brain_files
   for each row execute function public.touch_updated_date();
 alter table public.brain_files enable row level security;
+grant select, insert, update, delete on public.brain_files to authenticated;
 create policy "brain_files_own_select" on public.brain_files for select using (created_by_id = auth.uid());
 create policy "brain_files_own_insert" on public.brain_files for insert with check (created_by_id = auth.uid());
 create policy "brain_files_own_update" on public.brain_files for update using (created_by_id = auth.uid()) with check (created_by_id = auth.uid());
@@ -94,6 +98,7 @@ create index brands_owner_created_idx on public.brands (created_by_id, created_d
 create trigger brands_touch before update on public.brands
   for each row execute function public.touch_updated_date();
 alter table public.brands enable row level security;
+grant select, insert, update, delete on public.brands to authenticated;
 create policy "brands_own_select" on public.brands for select using (created_by_id = auth.uid());
 create policy "brands_own_insert" on public.brands for insert with check (created_by_id = auth.uid());
 create policy "brands_own_update" on public.brands for update using (created_by_id = auth.uid()) with check (created_by_id = auth.uid());
@@ -126,6 +131,7 @@ create index content_items_owner_created_idx on public.content_items (created_by
 create trigger content_items_touch before update on public.content_items
   for each row execute function public.touch_updated_date();
 alter table public.content_items enable row level security;
+grant select, insert, update, delete on public.content_items to authenticated;
 create policy "content_items_own_select" on public.content_items for select using (created_by_id = auth.uid());
 create policy "content_items_own_insert" on public.content_items for insert with check (created_by_id = auth.uid());
 create policy "content_items_own_update" on public.content_items for update using (created_by_id = auth.uid()) with check (created_by_id = auth.uid());
@@ -154,6 +160,7 @@ create index content_scans_owner_created_idx on public.content_scans (created_by
 create trigger content_scans_touch before update on public.content_scans
   for each row execute function public.touch_updated_date();
 alter table public.content_scans enable row level security;
+grant select, insert, update, delete on public.content_scans to authenticated;
 create policy "content_scans_own_select" on public.content_scans for select using (created_by_id = auth.uid());
 create policy "content_scans_own_insert" on public.content_scans for insert with check (created_by_id = auth.uid());
 create policy "content_scans_own_update" on public.content_scans for update using (created_by_id = auth.uid()) with check (created_by_id = auth.uid());
@@ -185,6 +192,7 @@ create index instagram_media_owner_created_idx on public.instagram_media (create
 create trigger instagram_media_touch before update on public.instagram_media
   for each row execute function public.touch_updated_date();
 alter table public.instagram_media enable row level security;
+grant select, insert, update, delete on public.instagram_media to authenticated;
 create policy "instagram_media_own_select" on public.instagram_media for select using (created_by_id = auth.uid());
 create policy "instagram_media_own_insert" on public.instagram_media for insert with check (created_by_id = auth.uid());
 create policy "instagram_media_own_update" on public.instagram_media for update using (created_by_id = auth.uid()) with check (created_by_id = auth.uid());
@@ -220,6 +228,7 @@ create index outliers_owner_created_idx on public.outliers (created_by_id, creat
 create trigger outliers_touch before update on public.outliers
   for each row execute function public.touch_updated_date();
 alter table public.outliers enable row level security;
+grant select, insert, update, delete on public.outliers to authenticated;
 create policy "outliers_own_select" on public.outliers for select using (created_by_id = auth.uid());
 create policy "outliers_own_insert" on public.outliers for insert with check (created_by_id = auth.uid());
 create policy "outliers_own_update" on public.outliers for update using (created_by_id = auth.uid()) with check (created_by_id = auth.uid());
@@ -245,6 +254,7 @@ create index research_owner_created_idx on public.research (created_by_id, creat
 create trigger research_touch before update on public.research
   for each row execute function public.touch_updated_date();
 alter table public.research enable row level security;
+grant select, insert, update, delete on public.research to authenticated;
 create policy "research_own_select" on public.research for select using (created_by_id = auth.uid());
 create policy "research_own_insert" on public.research for insert with check (created_by_id = auth.uid());
 create policy "research_own_update" on public.research for update using (created_by_id = auth.uid()) with check (created_by_id = auth.uid());
@@ -268,6 +278,7 @@ create index social_accounts_owner_created_idx on public.social_accounts (create
 create trigger social_accounts_touch before update on public.social_accounts
   for each row execute function public.touch_updated_date();
 alter table public.social_accounts enable row level security;
+grant select, insert, update, delete on public.social_accounts to authenticated;
 create policy "social_accounts_own_select" on public.social_accounts for select using (created_by_id = auth.uid());
 create policy "social_accounts_own_insert" on public.social_accounts for insert with check (created_by_id = auth.uid());
 create policy "social_accounts_own_update" on public.social_accounts for update using (created_by_id = auth.uid()) with check (created_by_id = auth.uid());
@@ -300,6 +311,7 @@ create index tiktok_media_owner_created_idx on public.tiktok_media (created_by_i
 create trigger tiktok_media_touch before update on public.tiktok_media
   for each row execute function public.touch_updated_date();
 alter table public.tiktok_media enable row level security;
+grant select, insert, update, delete on public.tiktok_media to authenticated;
 create policy "tiktok_media_own_select" on public.tiktok_media for select using (created_by_id = auth.uid());
 create policy "tiktok_media_own_insert" on public.tiktok_media for insert with check (created_by_id = auth.uid());
 create policy "tiktok_media_own_update" on public.tiktok_media for update using (created_by_id = auth.uid()) with check (created_by_id = auth.uid());
@@ -332,6 +344,7 @@ create index youtube_videos_owner_created_idx on public.youtube_videos (created_
 create trigger youtube_videos_touch before update on public.youtube_videos
   for each row execute function public.touch_updated_date();
 alter table public.youtube_videos enable row level security;
+grant select, insert, update, delete on public.youtube_videos to authenticated;
 create policy "youtube_videos_own_select" on public.youtube_videos for select using (created_by_id = auth.uid());
 create policy "youtube_videos_own_insert" on public.youtube_videos for insert with check (created_by_id = auth.uid());
 create policy "youtube_videos_own_update" on public.youtube_videos for update using (created_by_id = auth.uid()) with check (created_by_id = auth.uid());
