@@ -57,9 +57,12 @@ export default function BrainFileRow({ file }) {
             </Button>
           )}
 
-          <Button variant="ghost" size="icon" title="Open file" onClick={openFile}>
-            <ExternalLink />
-          </Button>
+          {/* Demo-workspace files are sample summaries with no stored file. */}
+          {!file.file_uri?.startsWith("demo/") && (
+            <Button variant="ghost" size="icon" title="Open file" onClick={openFile}>
+              <ExternalLink />
+            </Button>
+          )}
 
           <Button
             variant="ghost"

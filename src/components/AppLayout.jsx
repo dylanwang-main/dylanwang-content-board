@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Sidebar from "@/components/Sidebar";
 import MobileNav from "@/components/MobileNav";
 import FaviconSync from "@/components/FaviconSync";
+import GuestBanner from "@/components/GuestBanner";
 
 export default function AppLayout() {
   const { pathname } = useLocation();
@@ -22,6 +23,7 @@ export default function AppLayout() {
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="mx-auto w-full max-w-6xl px-4 pb-28 pt-6 sm:px-8 sm:pt-8 lg:px-10 lg:py-8">
+            <GuestBanner />
             <Outlet />
           </div>
         </motion.div>

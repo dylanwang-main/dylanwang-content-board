@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '@/lib/AuthContext';
 
@@ -7,17 +8,22 @@ const Spinner = () => (
   </div>
 );
 
-// Renders the app for signed-in users; everyone else goes to /login and comes
-// back to the page they asked for afterwards.
+// Signed-in users (real or guest) see the app. Anyone else is started in a
+// guest demo workspace; if guest sign-in is unavailable they go to /login.
 export default function ProtectedRoute() {
-  const { isAuthenticated, isLoadingAuth } = useAuth();
+  const { isAuthenticated, isLoadingAuth, guestError, ensureGuest } = useAuth();
   const location = useLocation();
+  const needsGuest = !isLoadingAuth && !isAuthenticated && !guestError;
 
-  if (isLoadingAuth) return <Spinner />;
-  if (!isAuthenticated) {
+  useEffect(() => {
+    if (needsGuest) ensureGuest();
+  }, [needsGuest, ensureGuest]);
+
+  if (isAuthenticated) return <Outlet />;
+  if (guestError) {
     const here = location.pathname + location.search;
     const to = here === '/' ? '/login' : `/login?returnTo=${encodeURIComponent(here)}`;
     return <Navigate to={to} replace />;
   }
-  return <Outlet />;
+  return <Spinner />;
 }

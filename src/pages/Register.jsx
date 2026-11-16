@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { UserPlus, Mail, Lock, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import { safeReturnTo } from "@/lib/authReturnTo";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ export default function Register() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
+  const { isGuest } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,10 +27,17 @@ export default function Register() {
     }
     setLoading(true);
     try {
-      const { session } = await api.auth.signUp(email, password);
-      // With email confirmation on, Supabase returns no session until the link is clicked.
-      if (session) window.location.href = safeReturnTo();
-      else setCheckEmail(true);
+      if (isGuest) {
+        // Convert the guest in place so everything made in the demo is kept.
+        const { user } = await api.auth.upgradeGuest(email, password);
+        if (user?.email === email) window.location.href = safeReturnTo();
+        else setCheckEmail(true);
+      } else {
+        const { session } = await api.auth.signUp(email, password);
+        // With email confirmation on, Supabase returns no session until the link is clicked.
+        if (session) window.location.href = safeReturnTo();
+        else setCheckEmail(true);
+      }
     } catch (err) {
       setError(err.message || "Registration failed");
     } finally {
@@ -61,7 +70,7 @@ export default function Register() {
     <AuthLayout
       icon={UserPlus}
       title="Create your account"
-      subtitle="Start building your content system"
+      subtitle={isGuest ? "Keep everything from your demo workspace" : "Start building your content system"}
       footer={
         <>
           Already have an account?{" "}

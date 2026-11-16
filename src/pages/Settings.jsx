@@ -9,7 +9,7 @@ import { LogOut } from "lucide-react";
 
 export default function Settings() {
   const { data: me, isLoading } = useMe();
-  const { logout } = useAuth();
+  const { logout, isGuest } = useAuth();
 
   return (
     <div className="space-y-10">
@@ -27,11 +27,17 @@ export default function Settings() {
           <ConnectedChannels />
           <div className="flex items-center justify-between rounded-3xl border border-border/70 bg-card/70 p-6">
             <p className="text-sm text-muted-foreground">
-              Signed in as <span className="text-foreground">{me.email}</span>
+              {isGuest ? (
+                "You're using a demo workspace."
+              ) : (
+                <>
+                  Signed in as <span className="text-foreground">{me.email}</span>
+                </>
+              )}
             </p>
             <Button variant="outline" className="rounded-full" onClick={logout}>
               <LogOut className="mr-2 h-4 w-4" />
-              Sign out
+              {isGuest ? "Reset demo" : "Sign out"}
             </Button>
           </div>
         </div>

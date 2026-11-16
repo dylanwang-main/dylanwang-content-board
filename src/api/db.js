@@ -112,6 +112,10 @@ export function makeAuth(injected) {
     sendPasswordReset: (email) =>
       c().auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` }).then(check),
     updatePassword: (password) => c().auth.updateUser({ password }).then(check),
+    // Guests are anonymous Supabase users with their own sandboxed rows.
+    signInAsGuest: () => c().auth.signInAnonymously().then(check),
+    // Turns a guest into a real account and keeps everything they made.
+    upgradeGuest: (email, password) => c().auth.updateUser({ email, password }).then(check),
     getSession: () => c().auth.getSession().then((r) => check(r).session),
     onChange: (fn) => c().auth.onAuthStateChange((event, session) => fn(event, session)).data.subscription,
     logout: () => c().auth.signOut(),
