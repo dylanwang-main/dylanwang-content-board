@@ -146,12 +146,9 @@ export function makeFiles(injected) {
   };
 }
 
-// Backend functions (AI, social sync) are ported in a later step. Until then
-// every call fails with a clear message instead of hanging.
+// Backend functions (AI, research, sync) run in the browser; see src/functions.
 export const functions = {
-  invoke: async (name) => {
-    throw new Error(`"${name}" isn't connected yet. AI and sync features are coming in the next update.`);
-  },
+  invoke: async (name, payload) => (await import('../functions/index.js')).invoke(name, payload),
 };
 
 export const api = {

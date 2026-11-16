@@ -1,7 +1,7 @@
 // Verifies the Base44-compatible data layer translates calls into the right Supabase queries.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { makeEntity, makeAuth, functions } from '../src/api/db.js';
+import { makeEntity, makeAuth } from '../src/api/db.js';
 
 function fakeClient(result = { data: [], error: null }) {
   const calls = [];
@@ -59,6 +59,3 @@ test('auth.me merges profile and returns null when signed out', async () => {
   assert.equal(await makeAuth(c).me(), null);
 });
 
-test('unported backend functions fail with a clear message', async () => {
-  await assert.rejects(functions.invoke('generateContent', {}), /generateContent.*isn't connected yet/);
-});

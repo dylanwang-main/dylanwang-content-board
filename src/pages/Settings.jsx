@@ -2,6 +2,7 @@ import PageHeader from "@/components/kit/PageHeader";
 import PageLoader from "@/components/kit/PageLoader";
 import ConnectedChannels from "@/components/settings/ConnectedChannels";
 import SettingsForm from "@/components/settings/SettingsForm";
+import AiKeysCard from "@/components/settings/AiKeysCard";
 import { useMe } from "@/hooks/useCreatorData";
 import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ export default function Settings() {
       ) : (
         <div className="mx-auto max-w-3xl space-y-6">
           <SettingsForm me={me} />
+          <AiKeysCard />
           <ConnectedChannels />
           <div className="flex items-center justify-between rounded-3xl border border-border/70 bg-card/70 p-6">
             <p className="text-sm text-muted-foreground">
