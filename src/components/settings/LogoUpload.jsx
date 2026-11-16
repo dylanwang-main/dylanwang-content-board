@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { ImageUp, Loader2, X } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 import { Button } from "@/components/ui/button";
 import { Image } from "@/components/ui/image";
 
@@ -16,7 +16,7 @@ export default function LogoUpload({ value, onChange }) {
     setUploading(true);
 
     try {
-      const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
+      const { file_url } = await api.integrations.Core.UploadPublicFile({ file });
       onChange(file_url);
     } finally {
       setUploading(false);

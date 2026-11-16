@@ -1,6 +1,7 @@
-// Supabase-backed data layer with the same call shape the app used with the
-// Base44 SDK (entities.X.list/filter/get/create/update/delete, auth.me/updateMe),
-// so hooks and pages keep working with an import swap.
+// Supabase-backed client with the same call shape the app used with the Base44
+// SDK (entities.X.list/filter/get/create/update/delete, auth.me/updateMe,
+// integrations.Core uploads, functions.invoke), so hooks and pages only needed
+// an import change.
 import { createClient } from '@supabase/supabase-js';
 
 const TABLES = {
@@ -15,6 +16,9 @@ const TABLES = {
   TikTokMedia: 'tiktok_media',
   YouTubeVideo: 'youtube_videos',
 };
+
+const BRAIN_BUCKET = 'brain';
+const PUBLIC_BUCKET = 'public-assets';
 
 let client;
 // Created on first use so this module can be imported (and tested) without env vars.
@@ -47,16 +51,19 @@ async function run(query) {
   return data;
 }
 
+// list/filter resolve to { items } like the Base44 SDK's paged results.
+const page = async (query) => ({ items: (await run(query)) ?? [] });
+
 export function makeEntity(table, injected) {
   const c = () => injected ?? getSupabase();
   return {
-    list: (a, b) => run(applyOpts(c().from(table).select('*'), readOpts(a, b))),
+    list: (a, b) => page(applyOpts(c().from(table).select('*'), readOpts(a, b))),
     filter: (where = {}, a, b) => {
       let q = c().from(table).select('*');
       for (const [col, val] of Object.entries(where)) {
         q = val === null ? q.is(col, null) : q.eq(col, val);
       }
-      return run(applyOpts(q, readOpts(a, b)));
+      return page(applyOpts(q, readOpts(a, b)));
     },
     get: (id) => run(c().from(table).select('*').eq('id', id).maybeSingle()),
     create: (data) => run(c().from(table).insert(data).select().single()),
@@ -69,10 +76,20 @@ export function makeEntities(client) {
   return Object.fromEntries(Object.entries(TABLES).map(([name, table]) => [name, makeEntity(table, client)]));
 }
 
+async function requireUser(c) {
+  const { data: { user } } = await c.auth.getUser();
+  if (!user) throw new Error('Not signed in');
+  return user;
+}
+
 export function makeAuth(injected) {
   const c = () => injected ?? getSupabase();
+  const check = ({ data, error }) => {
+    if (error) throw new Error(error.message);
+    return data;
+  };
   return {
-    // Returns the signed-in user merged with their profile fields, like Base44's auth.me().
+    // The signed-in user merged with their profile fields, like Base44's auth.me().
     async me() {
       const { data: { user } } = await c().auth.getUser();
       if (!user) return null;
@@ -86,15 +103,56 @@ export function makeAuth(injected) {
       };
     },
     async updateMe(data) {
-      const { data: { user } } = await c().auth.getUser();
-      if (!user) throw new Error('Not signed in');
+      const user = await requireUser(c());
       return run(c().from('profiles').upsert({ id: user.id, ...data }).select().single());
     },
+    signIn: (email, password) => c().auth.signInWithPassword({ email, password }).then(check),
+    signUp: (email, password) =>
+      c().auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin } }).then(check),
+    sendPasswordReset: (email) =>
+      c().auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` }).then(check),
+    updatePassword: (password) => c().auth.updateUser({ password }).then(check),
+    getSession: () => c().auth.getSession().then((r) => check(r).session),
+    onChange: (fn) => c().auth.onAuthStateChange((event, session) => fn(event, session)).data.subscription,
     logout: () => c().auth.signOut(),
   };
 }
 
-export const db = {
+// Replaces Base44's Core file integrations with Supabase Storage.
+export function makeFiles(injected) {
+  const c = () => injected ?? getSupabase();
+  const keyFor = (userId, file) => `${userId}/${crypto.randomUUID()}-${file.name.replace(/[^\w.-]+/g, '_')}`;
+  return {
+    async UploadPrivateFile({ file }) {
+      const user = await requireUser(c());
+      const path = keyFor(user.id, file);
+      await run(c().storage.from(BRAIN_BUCKET).upload(path, file, { contentType: file.type }));
+      return { file_uri: path };
+    },
+    async CreateFileSignedUrl({ file_uri, expires_in = 600 }) {
+      const data = await run(c().storage.from(BRAIN_BUCKET).createSignedUrl(file_uri, expires_in));
+      return { signed_url: data.signedUrl };
+    },
+    async UploadPublicFile({ file }) {
+      const user = await requireUser(c());
+      const path = keyFor(user.id, file);
+      await run(c().storage.from(PUBLIC_BUCKET).upload(path, file, { contentType: file.type }));
+      return { file_url: c().storage.from(PUBLIC_BUCKET).getPublicUrl(path).data.publicUrl };
+    },
+  };
+}
+
+// Backend functions (AI, social sync) are ported in a later step. Until then
+// every call fails with a clear message instead of hanging.
+export const functions = {
+  invoke: async (name) => {
+    throw new Error(`"${name}" isn't connected yet. AI and sync features are coming in the next update.`);
+  },
+};
+
+export const api = {
   entities: makeEntities(),
   auth: makeAuth(),
+  integrations: { Core: makeFiles() },
+  functions,
 };

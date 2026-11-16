@@ -3,9 +3,13 @@ import PageLoader from "@/components/kit/PageLoader";
 import ConnectedChannels from "@/components/settings/ConnectedChannels";
 import SettingsForm from "@/components/settings/SettingsForm";
 import { useMe } from "@/hooks/useCreatorData";
+import { useAuth } from "@/lib/AuthContext";
+import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
 
 export default function Settings() {
   const { data: me, isLoading } = useMe();
+  const { logout } = useAuth();
 
   return (
     <div className="space-y-10">
@@ -21,6 +25,15 @@ export default function Settings() {
         <div className="mx-auto max-w-3xl space-y-6">
           <SettingsForm me={me} />
           <ConnectedChannels />
+          <div className="flex items-center justify-between rounded-3xl border border-border/70 bg-card/70 p-6">
+            <p className="text-sm text-muted-foreground">
+              Signed in as <span className="text-foreground">{me.email}</span>
+            </p>
+            <Button variant="outline" className="rounded-full" onClick={logout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign out
+            </Button>
+          </div>
         </div>
       )}
     </div>

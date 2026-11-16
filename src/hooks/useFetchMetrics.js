@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 
 export function useFetchMetrics() {
   const queryClient = useQueryClient();
@@ -7,7 +7,7 @@ export function useFetchMetrics() {
   return useMutation({
     mutationFn: async ({ url, contentId }) => {
       try {
-        const response = await base44.functions.invoke("fetchPostMetrics", {
+        const response = await api.functions.invoke("fetchPostMetrics", {
           url,
           content_id: contentId,
         });

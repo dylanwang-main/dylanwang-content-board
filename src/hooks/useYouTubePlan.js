@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 
 export function useGenerateYouTube() {
   const queryClient = useQueryClient();
@@ -7,7 +7,7 @@ export function useGenerateYouTube() {
   return useMutation({
     mutationFn: async ({ topic }) => {
       try {
-        const response = await base44.functions.invoke("generateYouTubeVideo", { topic });
+        const response = await api.functions.invoke("generateYouTubeVideo", { topic });
         return response.data;
       } catch (error) {
         throw new Error(
@@ -24,7 +24,7 @@ export function useResearchYouTubeTitle() {
   return useMutation({
     mutationFn: async ({ topic }) => {
       try {
-        const response = await base44.functions.invoke("researchYouTubeTitle", { topic });
+        const response = await api.functions.invoke("researchYouTubeTitle", { topic });
         return response.data?.titles || [];
       } catch (error) {
         throw new Error(

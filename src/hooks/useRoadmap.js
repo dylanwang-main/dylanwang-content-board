@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 
 export function useBuildRoadmap() {
   const queryClient = useQueryClient();
@@ -9,7 +9,7 @@ export function useBuildRoadmap() {
       let roadmap;
 
       try {
-        const response = await base44.functions.invoke("buildRoadmap", {});
+        const response = await api.functions.invoke("buildRoadmap", {});
         roadmap = response.data.roadmap;
       } catch (error) {
         throw new Error(
@@ -17,7 +17,7 @@ export function useBuildRoadmap() {
         );
       }
 
-      await base44.auth.updateMe({ roadmap });
+      await api.auth.updateMe({ roadmap });
 
       return roadmap;
     },

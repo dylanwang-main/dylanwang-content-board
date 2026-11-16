@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 
 export function useSocialAccounts() {
   return useQuery({
     queryKey: ["social-accounts"],
     queryFn: async () => {
-      const page = await base44.entities.SocialAccount.list({
+      const page = await api.entities.SocialAccount.list({
         sort: "-updated_date",
         limit: 10,
       });

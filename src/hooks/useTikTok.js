@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 
 export function useTikTokMedia() {
   return useQuery({
     queryKey: ["tiktok"],
     queryFn: async () => {
-      const page = await base44.entities.TikTokMedia.list({
+      const page = await api.entities.TikTokMedia.list({
         sort: "-create_time",
         limit: 500,
       });
@@ -22,7 +22,7 @@ export function useSyncTikTok() {
   return useMutation({
     mutationFn: async () => {
       try {
-        const response = await base44.functions.invoke("syncTikTok", {});
+        const response = await api.functions.invoke("syncTikTok", {});
         return response.data;
       } catch (error) {
         throw new Error(
@@ -42,10 +42,10 @@ export function useAnalyzeTikTokMedia() {
 
   return useMutation({
     mutationFn: async (mediaId) => {
-      await base44.entities.TikTokMedia.update(mediaId, { status: "analyzing" });
+      await api.entities.TikTokMedia.update(mediaId, { status: "analyzing" });
       queryClient.invalidateQueries({ queryKey: ["tiktok"] });
 
-      base44.functions
+      api.functions
         .invoke("analyzeTikTokVideo", { media_id: mediaId })
         .catch(() => {})
         .finally(() => queryClient.invalidateQueries({ queryKey: ["tiktok"] }));
@@ -59,7 +59,7 @@ export function useDeleteTikTokMedia() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id) => base44.entities.TikTokMedia.delete(id),
+    mutationFn: (id) => api.entities.TikTokMedia.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tiktok"] }),
   });
 }

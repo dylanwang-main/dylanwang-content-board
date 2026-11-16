@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 
 export function useInstagramMedia() {
   return useQuery({
     queryKey: ["instagram"],
     queryFn: async () => {
-      const page = await base44.entities.InstagramMedia.list({
+      const page = await api.entities.InstagramMedia.list({
         sort: "-timestamp",
         limit: 500,
       });
@@ -22,7 +22,7 @@ export function useSyncInstagram() {
   return useMutation({
     mutationFn: async () => {
       try {
-        const response = await base44.functions.invoke("syncInstagramMedia", {});
+        const response = await api.functions.invoke("syncInstagramMedia", {});
         return response.data;
       } catch (error) {
         throw new Error(
@@ -42,10 +42,10 @@ export function useAnalyzeInstagramMedia() {
 
   return useMutation({
     mutationFn: async (mediaId) => {
-      await base44.entities.InstagramMedia.update(mediaId, { status: "analyzing" });
+      await api.entities.InstagramMedia.update(mediaId, { status: "analyzing" });
       queryClient.invalidateQueries({ queryKey: ["instagram"] });
 
-      base44.functions
+      api.functions
         .invoke("analyzeInstagramVideo", { media_id: mediaId })
         .catch(() => {})
         .finally(() => queryClient.invalidateQueries({ queryKey: ["instagram"] }));
@@ -59,7 +59,7 @@ export function useDeleteInstagramMedia() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id) => base44.entities.InstagramMedia.delete(id),
+    mutationFn: (id) => api.entities.InstagramMedia.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["instagram"] }),
   });
 }

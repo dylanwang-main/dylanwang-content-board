@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMe } from "@/hooks/useCreatorData";
 
-const DEFAULT_FAVICON = "https://base44.com/logo_v2.svg";
+const DEFAULT_FAVICON = "/favicon.svg";
 
 export default function FaviconSync() {
   const { data: me } = useMe();
