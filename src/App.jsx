@@ -6,6 +6,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider } from '@/lib/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
 import Analysis from '@/pages/Analysis';
+import About from '@/pages/About';
 import TikTokCallback from '@/pages/TikTokCallback';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import AppLayout from '@/components/AppLayout';
@@ -50,6 +51,7 @@ const AppRoutes = () => {
           <Route path="/outliers" element={<Outliers />} />
           <Route path="/performance" element={<Performance />} />
           <Route path="/analysis" element={<Analysis />} />
+          <Route path="/about" element={<About />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
 

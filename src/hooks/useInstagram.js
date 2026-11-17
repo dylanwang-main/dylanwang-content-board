@@ -67,8 +67,18 @@ export function useMediaInsights(item) {
     staleTime: 10 * 60 * 1000,
     queryFn: async () => {
       const me = await api.auth.me();
-      const token = await instagramToken(me, (data) => api.auth.updateMe(data));
-      if (!token) throw new Error("Instagram is not connected.");
+      const token = me?.is_anonymous ? null : await instagramToken(me, (data) => api.auth.updateMe(data));
+      if (!token) {
+        // Demo or disconnected: show what was synced.
+        const stored = {
+          views: item.view_count,
+          likes: item.like_count,
+          comments: item.comments_count,
+          shares: item.shares_count,
+          saved: item.saved_count,
+        };
+        return Object.fromEntries(Object.entries(stored).filter(([, v]) => v != null));
+      }
       const stats = await fetchMediaInsights({
         token,
         igUserId: me.instagram_user_id,

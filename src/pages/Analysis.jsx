@@ -7,15 +7,10 @@ import EmptyState from "@/components/kit/EmptyState";
 import PageHeader from "@/components/kit/PageHeader";
 import PageLoader from "@/components/kit/PageLoader";
 import Panel from "@/components/kit/Panel";
-import { useInstagramMedia } from "@/hooks/useInstagram";
-import { useTikTokMedia } from "@/hooks/useTikTok";
-import { useYouTubeVideos } from "@/hooks/useYouTube";
+import { useAllPosts } from "@/hooks/useAllPosts";
 import {
   breakdown,
   findings,
-  fromInstagram,
-  fromTikTok,
-  fromYouTube,
   rollingMedian,
   scorePosts,
   summary,
@@ -64,20 +59,9 @@ function Stat({ label, value, hint }) {
 }
 
 export default function Analysis() {
-  const ig = useInstagramMedia();
-  const tt = useTikTokMedia();
-  const yt = useYouTubeVideos();
+  const { posts: all, isLoading: loading } = useAllPosts();
   const [poolKey, setPoolKey] = useState("instagram:reel");
   const [includeTrials, setIncludeTrials] = useState(false);
-
-  const all = useMemo(
-    () => [
-      ...(ig.data || []).map(fromInstagram),
-      ...(tt.data || []).map(fromTikTok),
-      ...(yt.data || []).map(fromYouTube),
-    ],
-    [ig.data, tt.data, yt.data],
-  );
 
   const pool = POOLS.find((p) => p.key === poolKey);
   const available = POOLS.filter((p) => all.some((x) => x.platform === p.platform && x.kind === p.kind));
@@ -96,7 +80,6 @@ export default function Analysis() {
   const trend = rollingMedian(live.length ? live : scored).map((d) => ({ ...d, label: format(d.at, "MMM d") }));
   const ranked = [...scored].filter((p) => p.multiple != null).sort((a, b) => b.multiple - a.multiple);
   const hasTrials = all.some((p) => p.platform === pool.platform && p.kind === pool.kind && p.trial);
-  const loading = ig.isLoading || tt.isLoading || yt.isLoading;
   const m = stats.momentum;
 
   return (

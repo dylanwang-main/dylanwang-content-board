@@ -1,39 +1,51 @@
-import { format, parseISO } from "date-fns";
-import { compact, headline } from "@/lib/insights";
+import { Link } from "react-router-dom";
+import { format } from "date-fns";
+import { compact } from "@/lib/insights";
 
-function shortDate(value) {
-  const d = value ? parseISO(value) : null;
-  return d && !Number.isNaN(d.getTime()) ? format(d, "MMM d").toUpperCase() : "";
-}
-
-// The page opens on one real insight from the numbers, not a greeting.
-export default function HomeHero({ posts, followers }) {
-  const { title, detail } = headline(posts);
-  const dates = posts.map((p) => p.date).filter(Boolean).sort();
-  const range = dates.length ? `${shortDate(dates[0])} → ${shortDate(dates[dates.length - 1])}` : "NO FOOTAGE YET";
-  const views = posts.reduce((s, p) => s + p.views, 0);
-  const likes = posts.reduce((s, p) => s + p.likes, 0);
+// Opens on how your latest post did against your own median, not a greeting.
+export default function HomeHero({ headline, posts, habits, goal, followers }) {
+  const dates = posts.map((p) => p.at).filter(Boolean).sort((a, b) => a - b);
+  const range = dates.length
+    ? `${format(dates[0], "MMM d").toUpperCase()} → ${format(dates[dates.length - 1], "MMM d").toUpperCase()}`
+    : "NO FOOTAGE YET";
 
   const stats = [
-    { label: "views", value: compact(views) },
-    { label: posts.length === 1 ? "video" : "videos", value: posts.length },
-    { label: "likes", value: compact(likes) },
+    { label: "this week", value: `${habits.thisWeek}/${goal}`, to: "/performance" },
+    { label: "week streak", value: habits.streak, to: "/performance" },
+    { label: "since last post", value: habits.daysSinceLast == null ? "—" : `${habits.daysSinceLast}d`, to: "/performance" },
     ...(followers ? [{ label: "followers", value: compact(followers) }] : []),
   ];
 
   return (
     <section aria-label="Overview">
       <p className="font-mono text-xs text-primary">● REC&nbsp;&nbsp;{range}</p>
-      <h2 className="mt-3 max-w-3xl font-heading text-[28px] leading-tight text-foreground sm:text-[32px]">{title}</h2>
-      <p className="mt-2 max-w-3xl text-[15px] text-muted-foreground">{detail}</p>
+      <h2 className="mt-3 max-w-3xl font-heading text-[28px] leading-tight text-foreground sm:text-[32px]">{headline.title}</h2>
+      <p className="mt-2 max-w-3xl text-[15px] text-muted-foreground">
+        {headline.detail}{" "}
+        {headline.post && (
+          <Link to="/analysis" className="text-primary hover:underline">
+            See analysis →
+          </Link>
+        )}
+      </p>
       <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[13px] text-muted-foreground">
-        {stats.map((s) => (
-          <div key={s.label} className="flex items-baseline gap-2">
-            <dt className="sr-only">{s.label}</dt>
-            <dd className="text-xl text-foreground">{s.value}</dd>
-            <span aria-hidden="true">{s.label}</span>
-          </div>
-        ))}
+        {stats.map((s) => {
+          const body = (
+            <>
+              <dd className="text-xl text-foreground">{s.value}</dd>
+              <dt>{s.label}</dt>
+            </>
+          );
+          return s.to ? (
+            <Link key={s.label} to={s.to} className="flex items-baseline gap-2 hover:text-foreground">
+              {body}
+            </Link>
+          ) : (
+            <div key={s.label} className="flex items-baseline gap-2">
+              {body}
+            </div>
+          );
+        })}
       </dl>
     </section>
   );

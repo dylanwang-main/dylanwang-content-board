@@ -1,13 +1,16 @@
 import React from "react";
 import Logo from "@/components/Logo";
 import SidebarLink from "@/components/SidebarLink";
-import { HIDDEN_ITEMS, NAV_GROUPS, SETTINGS_ITEM } from "@/lib/nav";
+import { ABOUT_ITEM, HIDDEN_ITEMS, NAV_GROUPS, SETTINGS_ITEM } from "@/lib/nav";
 import { useMe } from "@/hooks/useCreatorData";
 
 export default function Sidebar() {
   const { data: me } = useMe();
   const extra = HIDDEN_ITEMS.filter(
-    (item) => (item.to === "/instagram" && me?.instagram_token) || (item.to === "/tiktok" && me?.tiktok_connected_at),
+    (item) =>
+      me?.is_anonymous ||
+      (item.to === "/instagram" && me?.instagram_token) ||
+      (item.to === "/tiktok" && me?.tiktok_connected_at),
   );
   const groups = NAV_GROUPS.map((group) =>
     group.label === "Channels" && extra.length ? { ...group, items: [...extra, ...group.items] } : group,
@@ -29,6 +32,7 @@ export default function Sidebar() {
       </nav>
 
       <div className="mt-auto border-t border-sidebar-border pt-3">
+        <SidebarLink item={ABOUT_ITEM} />
         <SidebarLink item={SETTINGS_ITEM} />
       </div>
     </aside>

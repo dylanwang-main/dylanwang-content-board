@@ -55,7 +55,7 @@ export default function YouTubeVideos() {
   const filtered = filterAndSortVideos(inRange, filters);
   const stats = useYouTubeStats(filtered);
   const account = accounts.find((row) => (row.platform || "").toLowerCase() === "youtube");
-  const handle = (me?.youtube_handle || "").trim().replace(/^@+/, "");
+  const handle = (me?.youtube_handle || account?.handle || "").trim().replace(/^@+/, "");
   const lastSynced = syncedLabel(account?.last_synced);
 
   return (

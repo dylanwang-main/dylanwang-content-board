@@ -55,3 +55,13 @@ test('findings call out a real gap and skip thin groups', () => {
   assert.ok(f.some((x) => /No caption run/.test(x.text)), JSON.stringify(f));
   assert.equal(summary(s).count, 12);
 });
+
+import { latestHeadline } from '../src/lib/analysis.js';
+
+test('home headline describes the latest live post', () => {
+  const posts = [post(1, 100), post(2, 100), post(3, 300), post(9, 50, { trial: true })];
+  const h = latestHeadline(scorePosts(posts));
+  assert.match(h.title, /Instagram reel did 3\.0x your median/);
+  assert.match(h.detail, /outlier/);
+  assert.equal(latestHeadline([]).title, 'Nothing synced yet.');
+});

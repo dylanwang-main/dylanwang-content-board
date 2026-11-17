@@ -256,3 +256,29 @@ export function summary(scored) {
     momentum: momentum(scored),
   };
 }
+
+const KIND_LABEL = { reel: "reel", post: "post", video: "TikTok", short: "Short", long: "video" };
+const PLATFORM_LABEL = { instagram: "Instagram", tiktok: "TikTok", youtube: "YouTube" };
+
+// The one sentence Home opens with: how your latest live post did.
+export function latestHeadline(scored) {
+  const live = scored.filter((p) => !p.trial && p.multiple != null && p.at);
+  if (!live.length) {
+    return { title: "Nothing synced yet.", detail: "Connect a channel in Settings and every post gets scored against your median." };
+  }
+  const last = live.reduce((a, b) => (b.at > a.at ? b : a));
+  const kind = KIND_LABEL[last.kind] || "post";
+  const x = last.multiple >= 10 ? Math.round(last.multiple) : last.multiple.toFixed(1);
+  const pool = live.filter((p) => p.platform === last.platform && p.kind === last.kind);
+  const m = momentum(pool);
+  const trend = m
+    ? ` Your typical ${kind} is ${m.change >= 0 ? "up" : "down"} ${Math.round(Math.abs(m.change) * 100)}% over the last 10.`
+    : "";
+  const verdict =
+    last.tier === "outlier" ? "an outlier" : last.tier === "above" ? "above normal" : last.tier === "flop" ? "a flop" : "about normal";
+  return {
+    title: `Your last ${PLATFORM_LABEL[last.platform]} ${kind} did ${x}x your median.`,
+    detail: `${Math.round(last[last.metric]).toLocaleString()} ${last.metric} vs a median of ${Math.round(last.median).toLocaleString()}: ${verdict}.${trend}`,
+    post: last,
+  };
+}

@@ -104,6 +104,7 @@ export function makeAuth(injected) {
         id: user.id,
         email: user.email,
         full_name: profile?.full_name ?? user.user_metadata?.full_name ?? null,
+        is_anonymous: Boolean(user.is_anonymous),
         role: 'user',
       };
     },
@@ -152,8 +153,19 @@ export function makeFiles(injected) {
 }
 
 // Backend functions (AI, research, sync) run in the browser; see src/functions.
+// Demo guests have fake channel data, so syncing is a no-op for them.
 export const functions = {
-  invoke: async (name, payload) => (await import('../functions/index.js')).invoke(name, payload),
+  invoke: async (name, payload) => {
+    if (/^sync/.test(name)) {
+      const { data } = await getSupabase().auth.getUser();
+      if (data?.user?.is_anonymous) {
+        const err = new Error('Syncing is off in the demo. Create an account to connect your own channels.');
+        err.response = { data: { error: err.message } };
+        throw err;
+      }
+    }
+    return (await import('../functions/index.js')).invoke(name, payload);
+  },
 };
 
 export const api = {

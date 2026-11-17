@@ -7,7 +7,7 @@ import { NAV_ITEMS } from "@/lib/nav";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-const PRIMARY_PATHS = ["/", "/brain", "/create", "/library"];
+const PRIMARY_PATHS = ["/", "/analysis", "/performance", "/create"];
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);

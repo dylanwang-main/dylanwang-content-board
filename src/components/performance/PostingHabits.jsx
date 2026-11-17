@@ -3,10 +3,7 @@ import { format } from "date-fns";
 import { Minus, Plus } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import Panel from "@/components/kit/Panel";
-import { useInstagramMedia } from "@/hooks/useInstagram";
-import { useTikTokMedia } from "@/hooks/useTikTok";
-import { useYouTubeVideos } from "@/hooks/useYouTube";
-import { fromInstagram, fromTikTok, fromYouTube } from "@/lib/analysis";
+import { useAllPosts } from "@/hooks/useAllPosts";
 import { calendar, habits } from "@/lib/habits";
 
 const GOAL_KEY = "cc.postingGoal";
@@ -16,7 +13,7 @@ const PLATFORMS = [
   { key: "youtube", label: "YouTube", color: "hsl(var(--chart-3))" },
 ];
 
-function loadGoal() {
+export function loadPostingGoal() {
   try {
     return Math.max(1, Number(localStorage.getItem(GOAL_KEY)) || 3);
   } catch {
@@ -37,10 +34,8 @@ function Stat({ label, value, hint, warn }) {
 // Consistency, from what your connected channels actually posted.
 // Trial and grid-hidden reels don't count: they're re-posts, not new posts.
 export default function PostingHabits() {
-  const ig = useInstagramMedia();
-  const tt = useTikTokMedia();
-  const yt = useYouTubeVideos();
-  const [goal, setGoal] = useState(loadGoal);
+  const { posts: synced } = useAllPosts();
+  const [goal, setGoal] = useState(loadPostingGoal);
   const [platform, setPlatform] = useState("all");
   const [hover, setHover] = useState(null);
 
@@ -52,15 +47,7 @@ export default function PostingHabits() {
     }
   }, [goal]);
 
-  const all = useMemo(
-    () =>
-      [
-        ...(ig.data || []).map(fromInstagram),
-        ...(tt.data || []).map(fromTikTok),
-        ...(yt.data || []).map(fromYouTube),
-      ].filter((p) => !p.trial && p.at),
-    [ig.data, tt.data, yt.data],
-  );
+  const all = useMemo(() => synced.filter((p) => !p.trial && p.at), [synced]);
   const connected = PLATFORMS.filter((p) => all.some((x) => x.platform === p.key));
   const posts = platform === "all" ? all : all.filter((p) => p.platform === platform);
   const h = habits(posts, { goal });
