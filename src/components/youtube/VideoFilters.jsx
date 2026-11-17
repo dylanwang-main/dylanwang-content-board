@@ -1,31 +1,12 @@
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FORMAT_OPTIONS, SORT_OPTIONS, VISIBILITY_OPTIONS } from "@/lib/videoFilters";
+import { FORMAT_OPTIONS, SORT_OPTIONS } from "@/lib/videoFilters";
 
-function Toggle({ options, value, onChange }) {
-  return (
-    <div className="inline-flex shrink-0 rounded-full border border-border bg-muted/40 p-1">
-      {options.map((opt) => (
-        <button
-          key={opt.value}
-          type="button"
-          onClick={() => onChange(opt.value)}
-          className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-            value === opt.value ? "bg-primary/15 text-primary" : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          {opt.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-// Search box, format and visibility toggles, and sort menu for the videos list.
-export default function VideoFilters({ value, onChange, shown, total, showVisibility }) {
+// Search box, Shorts / Long form toggle and sort menu for the videos list.
+export default function VideoFilters({ value, onChange, shown, total }) {
   const set = (patch) => onChange({ ...value, ...patch });
-  const active = value.query || value.format !== "all" || value.visibility !== "all";
+  const active = value.query || value.format !== "all";
 
   return (
     <div className="space-y-3">
@@ -50,7 +31,20 @@ export default function VideoFilters({ value, onChange, shown, total, showVisibi
           )}
         </div>
 
-        <Toggle options={FORMAT_OPTIONS} value={value.format} onChange={(format) => set({ format })} />
+        <div className="inline-flex shrink-0 rounded-full border border-border bg-muted/40 p-1">
+          {FORMAT_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => set({ format: opt.value })}
+              className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                value.format === opt.value ? "bg-primary/15 text-primary" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
 
         <Select value={value.sort} onValueChange={(sort) => set({ sort })}>
           <SelectTrigger className="w-full rounded-xl sm:w-48">
@@ -66,10 +60,6 @@ export default function VideoFilters({ value, onChange, shown, total, showVisibi
         </Select>
       </div>
 
-      {showVisibility && (
-        <Toggle options={VISIBILITY_OPTIONS} value={value.visibility} onChange={(visibility) => set({ visibility })} />
-      )}
-
       <p className="text-xs text-muted-foreground">
         Showing {shown} of {total} videos
         {active && (
@@ -77,7 +67,7 @@ export default function VideoFilters({ value, onChange, shown, total, showVisibi
             {" · "}
             <button
               type="button"
-              onClick={() => set({ query: "", format: "all", visibility: "all" })}
+              onClick={() => set({ query: "", format: "all" })}
               className="text-primary hover:underline"
             >
               Clear filters

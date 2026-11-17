@@ -6,7 +6,6 @@
 import { api } from '@/api/db';
 import { invokeLLM } from '@/ai/llm';
 import { getYouTubeKey } from '@/ai/keys';
-import { getYouTubeAccessToken } from '@/lib/googleAuth';
 
 function notAvailable(what) {
   return async () => {
@@ -50,4 +49,4 @@ export function createClientFromRequest() {
   return client;
 }
 
-export { getYouTubeKey, getYouTubeAccessToken };
+export { getYouTubeKey };

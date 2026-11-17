@@ -7,13 +7,6 @@ export const FORMAT_OPTIONS = [
   { value: "long_form", label: "Long form" },
 ];
 
-export const VISIBILITY_OPTIONS = [
-  { value: "all", label: "All" },
-  { value: "public", label: "Public" },
-  { value: "unlisted", label: "Unlisted" },
-  { value: "private", label: "Private" },
-];
-
 export const SORT_OPTIONS = [
   { value: "newest", label: "Newest" },
   { value: "oldest", label: "Oldest" },
@@ -46,12 +39,11 @@ const SORTERS = {
   engagement: (a, b) => (engagementRate(b) ?? -1) - (engagementRate(a) ?? -1),
 };
 
-export function filterAndSortVideos(videos, { query = "", format = "all", visibility = "all", sort = "newest" } = {}) {
+export function filterAndSortVideos(videos, { query = "", format = "all", sort = "newest" } = {}) {
   const q = query.trim().toLowerCase();
   const sorter = SORTERS[sort] || SORTERS.newest;
   return videos
     .filter((v) => format === "all" || (v.format || "short_form") === format)
-    .filter((v) => visibility === "all" || v.privacy_status === visibility)
     .filter((v) => !q || `${v.title || ""} ${v.description || ""}`.toLowerCase().includes(q))
     .slice()
     .sort(sorter);

@@ -1,20 +1,9 @@
-import { createClientFromRequest, getYouTubeKey, getYouTubeAccessToken } from './runtime.js';
+import { createClientFromRequest, getYouTubeKey } from './runtime.js';
 import { classifyFormat, parseDuration } from './shared/youtube.js';
 import { upsertByKey, upsertSocialAccount } from './shared/socialSync.js';
 
 function apiKey() {
   return getYouTubeKey();
-}
-
-// With a connected Google account (OAuth token) the owner's unlisted and
-// private uploads are visible too; with only an API key YouTube returns public
-// videos. Adds whichever credential we have to a YouTube Data API request.
-function ytFetch(url, { key, token }) {
-  const full = token ? url : `${url}&key=${key}`;
-  return fetch(full, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    signal: AbortSignal.timeout(15000),
-  });
 }
 
 export default async function (req) {
@@ -27,23 +16,20 @@ export default async function (req) {
     const raw = typeof body.handle === 'string' ? body.handle.trim() : '';
     const handle = raw.replace(/^@+/, '').trim();
 
+    if (!handle) return Response.json({ error: 'Add your channel handle first' }, { status: 400 });
+
     const key = apiKey();
-    const token = getYouTubeAccessToken();
-    const auth = { key, token };
-
-    if (!handle && !token) return Response.json({ error: 'Add your channel handle first' }, { status: 400 });
-
-    if (!key && !token) {
+    if (!key) {
       return Response.json(
         { error: 'Add your YouTube Data API key in Settings first' },
         { status: 400 }
       );
     }
 
-    const channelRes = await ytFetch(
+    const channelRes = await fetch(
       'https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,contentDetails' +
-        (token ? '&mine=true' : `&forHandle=@${encodeURIComponent(handle)}`),
-      auth
+        `&forHandle=@${encodeURIComponent(handle)}&key=${key}`,
+      { signal: AbortSignal.timeout(15000) }
     );
     const channelData = await channelRes.json();
 
@@ -73,10 +59,10 @@ export default async function (req) {
       while (ids.length < 500) {
         const url =
           'https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50' +
-          `&playlistId=${uploads}` +
+          `&playlistId=${uploads}&key=${key}` +
           (pageToken ? `&pageToken=${encodeURIComponent(pageToken)}` : '');
 
-        const playlistRes = await ytFetch(url, auth);
+        const playlistRes = await fetch(url, { signal: AbortSignal.timeout(15000) });
         const playlist = await playlistRes.json();
 
         if (!playlistRes.ok || (playlist.error && playlist.error.message)) {
@@ -100,10 +86,10 @@ export default async function (req) {
       for (let index = 0; index < uniqueIds.length; index += 50) {
         const batch = uniqueIds.slice(index, index + 50);
 
-        const videosRes = await ytFetch(
-          'https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails,status' +
-            `&id=${batch.join(',')}`,
-          auth
+        const videosRes = await fetch(
+          'https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails' +
+            `&id=${batch.join(',')}&key=${key}`,
+          { signal: AbortSignal.timeout(15000) }
         );
         const videosData = await videosRes.json();
 
@@ -135,21 +121,17 @@ export default async function (req) {
         view_count: Number(stats.viewCount || 0),
         like_count: Number(stats.likeCount || 0),
         comment_count: Number(stats.commentCount || 0),
-        // An API-key sync only ever returns public videos.
-        privacy_status: (video.status && video.status.privacyStatus) || (token ? null : 'public'),
       };
     });
 
-    const channelHandle = handle || ((channel.snippet && channel.snippet.customUrl) || '').replace(/^@+/, '');
     const account = await upsertSocialAccount(base44, 'youtube', {
-      handle: '@' + channelHandle,
+      handle: '@' + handle,
       follower_count: Number((channel.statistics && channel.statistics.subscriberCount) || 0),
-      // The public videoCount excludes unlisted/private uploads.
-      media_count: token ? videos.length : Number((channel.statistics && channel.statistics.videoCount) || videos.length),
-      profile_url: 'https://www.youtube.com/@' + channelHandle,
+      media_count: Number((channel.statistics && channel.statistics.videoCount) || videos.length),
+      profile_url: 'https://www.youtube.com/@' + handle,
     });
 
-    return Response.json({ synced: videos.length, account, includesPrivate: Boolean(token) });
+    return Response.json({ synced: videos.length, account });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
