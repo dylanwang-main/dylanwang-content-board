@@ -6,9 +6,11 @@ import { useMe } from "@/hooks/useCreatorData";
 
 export default function Sidebar() {
   const { data: me } = useMe();
-  const instagram = HIDDEN_ITEMS.find((item) => item.to === "/instagram");
+  const extra = HIDDEN_ITEMS.filter(
+    (item) => (item.to === "/instagram" && me?.instagram_token) || (item.to === "/tiktok" && me?.tiktok_connected_at),
+  );
   const groups = NAV_GROUPS.map((group) =>
-    group.label === "Channels" && me?.instagram_token ? { ...group, items: [instagram, ...group.items] } : group,
+    group.label === "Channels" && extra.length ? { ...group, items: [...extra, ...group.items] } : group,
   );
 
   return (

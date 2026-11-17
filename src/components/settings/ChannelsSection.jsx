@@ -7,6 +7,9 @@ import { useMe, useSaveMe } from "@/hooks/useCreatorData";
 import { useSocialAccounts } from "@/hooks/useSocialAccounts";
 import { useSyncYouTube } from "@/hooks/useYouTube";
 import { useSyncInstagram } from "@/hooks/useInstagram";
+import { useSyncTikTok } from "@/hooks/useTikTok";
+import { useQueryClient } from "@tanstack/react-query";
+import { startTikTokLogin, tiktokCall } from "@/lib/tiktok";
 import { getYouTubeKey, setYouTubeKey } from "@/ai/keys";
 import { compact } from "@/lib/insights";
 
@@ -282,6 +285,82 @@ function InstagramRow() {
   );
 }
 
+function TikTokRow() {
+  const { data: me } = useMe();
+  const { data: accounts = [] } = useSocialAccounts();
+  const sync = useSyncTikTok();
+  const queryClient = useQueryClient();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(null);
+  const account = accounts.find((a) => (a.platform || "").toLowerCase() === "tiktok");
+  const connected = Boolean(me?.tiktok_connected_at);
+
+  const connect = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      await startTikTokLogin();
+    } catch (e) {
+      setError(e.message);
+      setBusy(false);
+    }
+  };
+
+  const disconnect = async () => {
+    setBusy(true);
+    try {
+      await tiktokCall("disconnect");
+      queryClient.invalidateQueries();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const lastSynced = synced(account?.last_synced);
+  const status = connected
+    ? [
+        account?.handle,
+        account && `${compact(account.follower_count)} followers`,
+        account && `${compact(account.media_count)} videos`,
+        lastSynced ? `synced ${lastSynced}` : "not synced yet",
+      ]
+        .filter(Boolean)
+        .join(" · ")
+    : "Not connected";
+
+  return (
+    <Row
+      icon={Music2}
+      name="TikTok"
+      status={status}
+      actions={
+        connected ? (
+          <>
+            <Button variant="ghost" size="sm" className="text-destructive" onClick={disconnect} disabled={busy}>
+              Disconnect
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => sync.mutate()} disabled={sync.isPending || busy}>
+              {sync.isPending ? <Loader2 className="animate-spin" /> : <RefreshCw />}
+              {sync.isPending ? "Syncing…" : "Sync"}
+            </Button>
+          </>
+        ) : (
+          <Button size="sm" onClick={connect} disabled={busy}>
+            {busy && <Loader2 className="animate-spin" />}
+            Connect
+          </Button>
+        )
+      }
+    >
+      {(error || sync.isError) && (
+        <p className="px-4 pb-3 text-xs text-destructive sm:pl-[46px]">{error || sync.error.message}</p>
+      )}
+    </Row>
+  );
+}
+
 // Every channel in one list: what's connected, what isn't, one button each.
 export default function ChannelsSection() {
   return (
@@ -293,12 +372,7 @@ export default function ChannelsSection() {
       <ul className="rounded-lg border border-border bg-card">
         <YouTubeRow />
         <InstagramRow />
-        <Row
-          icon={Music2}
-          name="TikTok"
-          status="Not connected · setup coming next"
-          actions={<span className="text-xs text-muted-foreground">Soon</span>}
-        />
+        <TikTokRow />
       </ul>
     </section>
   );

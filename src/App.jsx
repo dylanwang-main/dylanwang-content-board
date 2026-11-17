@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider } from '@/lib/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
+import TikTokCallback from '@/pages/TikTokCallback';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import AppLayout from '@/components/AppLayout';
 import Login from '@/pages/Login';
@@ -34,6 +35,7 @@ const AppRoutes = () => {
 
       <Route element={<ProtectedRoute />}>
         <Route path="/brand" element={<Navigate to="/brain" replace />} />
+        <Route path="/auth/tiktok" element={<TikTokCallback />} />
 
         <Route element={<AppLayout />}>
           <Route path="/" element={<Dashboard />} />

@@ -1,4 +1,5 @@
 import { createClientFromRequest } from './runtime.js';
+import { tiktokFetch } from '../lib/tiktok.js';
 import {
   errorMessage,
   upsertByKey,
@@ -20,26 +21,8 @@ export default async function (req) {
     const user = await base44.auth.me().catch((e) => (e.status === 401 ? null : Promise.reject(e)));
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    let connection = null;
-    try {
-      connection = await base44.asServiceRole.connectors.getConnection('tiktok');
-    } catch (error) {
-      connection = null;
-    }
-
-    const token = connection && connection.accessToken;
-    if (!token) {
-      return Response.json(
-        { error: 'TikTok is not connected. Reconnect the TikTok connector, then sync again.' },
-        { status: 400 }
-      );
-    }
-
-    const authHeaders = { Authorization: `Bearer ${token}` };
-
-    const profileRes = await fetch(
-      'https://open.tiktokapis.com/v2/user/info/?fields=open_id,union_id,display_name,avatar_url,follower_count,following_count,likes_count,video_count',
-      { headers: authHeaders, signal: AbortSignal.timeout(15000) }
+    const profileRes = await tiktokFetch(
+      '/v2/user/info/?fields=open_id,union_id,display_name,username,avatar_url,follower_count,following_count,likes_count,video_count'
     );
     const profile = await profileRes.json();
     const profileError = profile && profile.error;
@@ -60,15 +43,7 @@ export default async function (req) {
       const body = { max_count: 20 };
       if (cursor) body.cursor = cursor;
 
-      const listRes = await fetch(
-        `https://open.tiktokapis.com/v2/video/list/?fields=${VIDEO_FIELDS}`,
-        {
-          method: 'POST',
-          headers: { ...authHeaders, 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-          signal: AbortSignal.timeout(15000),
-        }
-      );
+      const listRes = await tiktokFetch(`/v2/video/list/?fields=${VIDEO_FIELDS}`, { method: 'POST', body });
       const list = await listRes.json();
       const listError = list && list.error;
       if (!listRes.ok || (listError && listError.code && listError.code !== 'ok')) {
@@ -102,7 +77,8 @@ export default async function (req) {
     }));
 
     const account = await upsertSocialAccount(base44, 'tiktok', {
-      handle: accountInfo.display_name || '',
+      handle: accountInfo.username ? '@' + accountInfo.username : accountInfo.display_name || '',
+      profile_url: accountInfo.username ? 'https://www.tiktok.com/@' + accountInfo.username : undefined,
       follower_count: accountInfo.follower_count || 0,
       following_count: accountInfo.following_count || 0,
       media_count:
