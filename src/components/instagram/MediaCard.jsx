@@ -1,7 +1,9 @@
 import { useState } from "react";
 import {
   Check,
+  Eye,
   Heart,
+  Send,
   ImageOff,
   Loader2,
   MessageCircle,
@@ -13,6 +15,7 @@ import MediaDetailDialog from "@/components/instagram/MediaDetailDialog";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/content";
 import { useAnalyzeInstagramMedia, useDeleteInstagramMedia } from "@/hooks/useInstagram";
+import { isReel } from "@/lib/mediaFilters";
 
 const STATUS_PILLS = {
   synced: "bg-muted text-muted-foreground",
@@ -57,6 +60,10 @@ export default function MediaCard({ item }) {
               <ImageOff className="h-6 w-6" strokeWidth={1.5} />
             </div>
           )}
+
+          <span className="absolute left-2 top-2 rounded bg-black/60 px-1.5 py-0.5 font-mono text-[10px] text-white">
+            {isReel(item) ? "REEL" : item.media_type === "CAROUSEL_ALBUM" ? "CAROUSEL" : "POST"}
+          </span>
 
           <div
             className="absolute right-2 top-2 z-10 flex items-center gap-1 rounded-full bg-card/80 p-1 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100 [@media(hover:none)]:opacity-100"
@@ -110,7 +117,13 @@ export default function MediaCard({ item }) {
         <div className="space-y-2 p-3">
           <p className="line-clamp-2 text-sm">{item.caption || "No caption"}</p>
 
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <div className="flex items-center gap-3 font-mono text-xs text-muted-foreground">
+            {item.view_count != null && (
+              <span className="inline-flex items-center gap-1">
+                <Eye className="h-3 w-3" />
+                {formatNumber(item.view_count)}
+              </span>
+            )}
             <span className="inline-flex items-center gap-1">
               <Heart className="h-3 w-3" />
               {formatNumber(item.like_count)}
@@ -119,6 +132,12 @@ export default function MediaCard({ item }) {
               <MessageCircle className="h-3 w-3" />
               {formatNumber(item.comments_count)}
             </span>
+            {item.shares_count != null && (
+              <span className="inline-flex items-center gap-1">
+                <Send className="h-3 w-3" />
+                {formatNumber(item.shares_count)}
+              </span>
+            )}
             {dateLabel && <span className="ml-auto">{dateLabel}</span>}
           </div>
 

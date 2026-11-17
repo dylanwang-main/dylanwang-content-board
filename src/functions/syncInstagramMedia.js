@@ -8,6 +8,8 @@ import {
 
 const MEDIA_FIELDS =
   'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,like_count,comments_count';
+// Facebook-login tokens can also read these on each post.
+const EXTRA_FIELDS = ',media_product_type,is_shared_to_feed,shares_count,saved_count,total_views_count';
 
 export default async function (req) {
   try {
@@ -50,14 +52,23 @@ export default async function (req) {
       );
     }
 
-    const media = [];
-    let next =
-      `${base}/${node}/media?fields=${MEDIA_FIELDS}` +
-      `&limit=50&access_token=${encodeURIComponent(token)}`;
+    const firstPage = (fields) =>
+      `${base}/${node}/media?fields=${fields}&limit=50&access_token=${encodeURIComponent(token)}`;
+    const wantsExtras = base.includes('graph.facebook.com');
+    let media = [];
+    let next = firstPage(MEDIA_FIELDS + (wantsExtras ? EXTRA_FIELDS : ''));
+    let triedBasic = !wantsExtras;
 
     while (next && media.length < 500) {
       const pageRes = await fetch(next, { signal: AbortSignal.timeout(15000) });
       const page = await pageRes.json();
+      if ((!pageRes.ok || page.error) && !triedBasic) {
+        // Some accounts can't read the extra fields: start over without them.
+        triedBasic = true;
+        media = [];
+        next = firstPage(MEDIA_FIELDS);
+        continue;
+      }
       if (!pageRes.ok || page.error) {
         return Response.json(
           { error: 'Instagram sync failed: ' + errorMessage(page && page.error) },
@@ -80,6 +91,11 @@ export default async function (req) {
       timestamp: item.timestamp,
       like_count: item.like_count || 0,
       comments_count: item.comments_count || 0,
+      media_product_type: item.media_product_type || null,
+      is_shared_to_feed: typeof item.is_shared_to_feed === 'boolean' ? item.is_shared_to_feed : null,
+      view_count: item.total_views_count ?? item.view_count ?? null,
+      shares_count: item.shares_count ?? null,
+      saved_count: item.saved_count ?? null,
     }));
 
     const account = await upsertSocialAccount(base44, 'instagram', {
