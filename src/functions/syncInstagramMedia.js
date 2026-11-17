@@ -1,4 +1,5 @@
 import { createClientFromRequest } from './runtime.js';
+import { instagramEndpoint } from '../lib/instagram.js';
 import {
   errorMessage,
   upsertByKey,
@@ -29,8 +30,16 @@ export default async function (req) {
       );
     }
 
+    let endpoint;
+    try {
+      endpoint = instagramEndpoint(token, connection.igUserId);
+    } catch (error) {
+      return Response.json({ error: error.message }, { status: 400 });
+    }
+    const { base, node } = endpoint;
+
     const profileRes = await fetch(
-      `https://graph.instagram.com/me?fields=id,username,followers_count,follows_count,media_count&access_token=${encodeURIComponent(token)}`,
+      `${base}/${node}?fields=id,username,followers_count,follows_count,media_count&access_token=${encodeURIComponent(token)}`,
       { signal: AbortSignal.timeout(15000) }
     );
     const profile = await profileRes.json();
@@ -43,7 +52,7 @@ export default async function (req) {
 
     const media = [];
     let next =
-      `https://graph.instagram.com/me/media?fields=${MEDIA_FIELDS}` +
+      `${base}/${node}/media?fields=${MEDIA_FIELDS}` +
       `&limit=50&access_token=${encodeURIComponent(token)}`;
 
     while (next && media.length < 500) {

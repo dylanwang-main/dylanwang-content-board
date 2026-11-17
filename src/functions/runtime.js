@@ -42,7 +42,7 @@ const client = {
           const me = await api.auth.me();
           const accessToken = await instagramToken(me, (data) => api.auth.updateMe(data));
           if (!accessToken) throw new Error('Instagram is not connected.');
-          return { accessToken };
+          return { accessToken, igUserId: me.instagram_user_id };
         }
         throw new Error('TikTok sync is not set up yet.');
       },

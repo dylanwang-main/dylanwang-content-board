@@ -169,21 +169,24 @@ function InstagramRow() {
   const connected = Boolean(me?.instagram_token);
   const [open, setOpen] = useState(false);
   const [token, setToken] = useState("");
+  const [igUserId, setIgUserId] = useState("");
 
   const connect = async (e) => {
     e.preventDefault();
     await saveMe.mutateAsync({
       instagram_token: token.trim(),
+      instagram_user_id: igUserId.trim() || me?.instagram_user_id || null,
       // Unknown age: refresh it on the first sync.
       instagram_token_refreshed_at: null,
     });
     setToken("");
+    setIgUserId("");
     setOpen(false);
     sync.mutate();
   };
 
   const disconnect = async () => {
-    await saveMe.mutateAsync({ instagram_token: null, instagram_token_refreshed_at: null });
+    await saveMe.mutateAsync({ instagram_token: null, instagram_user_id: null, instagram_token_refreshed_at: null });
     setOpen(false);
   };
 
@@ -234,8 +237,20 @@ function InstagramRow() {
               autoComplete="off"
               value={token}
               onChange={(e) => setToken(e.target.value)}
-              placeholder="IGAA…"
+              placeholder="IGAA… or EAA…"
               required
+            />
+          </label>
+          <label className="block space-y-1.5">
+            <span className="text-xs text-muted-foreground">
+              Instagram account ID (needed for tokens starting with EAA)
+            </span>
+            <Input
+              inputMode="numeric"
+              autoComplete="off"
+              value={igUserId}
+              onChange={(e) => setIgUserId(e.target.value)}
+              placeholder={me?.instagram_user_id || "1784…"}
             />
           </label>
           <p className="text-xs text-muted-foreground">
@@ -243,8 +258,8 @@ function InstagramRow() {
             <a href={META_APPS_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-foreground underline underline-offset-2">
               Meta for Developers <ExternalLink className="h-3 w-3" />
             </a>
-            : Use cases → Customize → API setup with Instagram login → Generate token. It's saved to your account only and
-            refreshed automatically.
+            : Use cases → Customize → API setup → Generate token. The account ID is the number under your username there. Saved to
+            your account only.
           </p>
           <div className="flex flex-wrap items-center gap-2">
             <Button type="submit" size="sm" disabled={busy || !token.trim()}>
