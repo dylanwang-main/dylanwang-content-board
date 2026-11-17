@@ -18,13 +18,13 @@ import { formatNumber } from "@/lib/content";
 import { inDateRange } from "@/lib/dateRange";
 
 const FILTERS_KEY = "cc.instagramFilters";
-const DEFAULT_FILTERS = { query: "", type: "all", sort: "newest" };
+const DEFAULT_FILTERS = { query: "", type: "all", sort: "newest", hideTrials: true };
 
 // Type and sort are remembered between visits; search starts empty.
 function loadFilters() {
   try {
     const saved = JSON.parse(localStorage.getItem(FILTERS_KEY) || "{}");
-    return { ...DEFAULT_FILTERS, type: saved.type || "all", sort: saved.sort || "newest" };
+    return { ...DEFAULT_FILTERS, type: saved.type || "all", sort: saved.sort || "newest", hideTrials: saved.hideTrials !== false };
   } catch {
     return DEFAULT_FILTERS;
   }
@@ -54,11 +54,11 @@ export default function Instagram() {
   const [filters, setFilters] = useState(loadFilters);
   useEffect(() => {
     try {
-      localStorage.setItem(FILTERS_KEY, JSON.stringify({ type: filters.type, sort: filters.sort }));
+      localStorage.setItem(FILTERS_KEY, JSON.stringify({ type: filters.type, sort: filters.sort, hideTrials: filters.hideTrials }));
     } catch {
       // Storage unavailable: filters just won't be remembered.
     }
-  }, [filters.type, filters.sort]);
+  }, [filters.type, filters.sort, filters.hideTrials]);
 
   const inRange = media.filter((item) => inDateRange(item.timestamp, dateRange));
   const filtered = filterAndSortMedia(inRange, filters);

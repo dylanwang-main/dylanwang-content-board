@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api/db";
+import { fetchMediaInsights, instagramToken } from "@/lib/instagram";
+import { isReel } from "@/lib/mediaFilters";
 
 export function useInstagramMedia() {
   return useQuery({
@@ -55,11 +57,33 @@ export function useAnalyzeInstagramMedia() {
   });
 }
 
-export function useDeleteInstagramMedia() {
+// Full stats for one post, fetched when its detail view opens. The headline
+// numbers are saved back so cards and sorting pick them up.
+export function useMediaInsights(item) {
   const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (id) => api.entities.InstagramMedia.delete(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["instagram"] }),
+  return useQuery({
+    queryKey: ["instagram-insights", item?.ig_id],
+    enabled: Boolean(item?.ig_id),
+    staleTime: 10 * 60 * 1000,
+    queryFn: async () => {
+      const me = await api.auth.me();
+      const token = await instagramToken(me, (data) => api.auth.updateMe(data));
+      if (!token) throw new Error("Instagram is not connected.");
+      const stats = await fetchMediaInsights({
+        token,
+        igUserId: me.instagram_user_id,
+        mediaId: item.ig_id,
+        reel: isReel(item),
+      });
+      const patch = {};
+      if (stats.views != null) patch.view_count = stats.views;
+      if (stats.shares != null) patch.shares_count = stats.shares;
+      if (stats.saved != null) patch.saved_count = stats.saved;
+      if (Object.keys(patch).length) {
+        await api.entities.InstagramMedia.update(item.id, patch).catch(() => {});
+        queryClient.invalidateQueries({ queryKey: ["instagram"] });
+      }
+      return stats;
+    },
   });
 }

@@ -44,3 +44,17 @@ test('Facebook-style tokens are never refreshed', async () => {
   const fetchImpl = async () => { throw new Error('should not fetch'); };
   assert.equal(await instagramToken({ instagram_token: 'EAAxyz' }, async () => {}, fetchImpl), 'EAAxyz');
 });
+
+import { fetchMediaInsights } from '../src/lib/instagram.js';
+
+test('insights keep the metrics that worked and skip the ones that failed', async () => {
+  const fetchImpl = async (url) => {
+    const metric = new URL(url).searchParams.get('metric');
+    if (metric === 'follows') return new Response('{"error":{"message":"nope"}}', { status: 400 });
+    return new Response(JSON.stringify({ data: [{ name: metric, values: [{ value: 7 }] }] }));
+  };
+  const out = await fetchMediaInsights({ token: 'EAAx', igUserId: '1784', mediaId: 'm1', reel: true }, fetchImpl);
+  assert.equal(out.views, 7);
+  assert.equal(out.ig_reels_avg_watch_time, 7);
+  assert.equal('follows' in out, false);
+});

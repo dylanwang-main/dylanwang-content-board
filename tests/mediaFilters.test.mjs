@@ -27,3 +27,13 @@ test('engagement is null without views', () => {
   assert.equal(mediaEngagementRate(media[1]), null);
   assert.equal(mediaEngagementRate(media[0]), 0.08);
 });
+
+test('trial reels are hidden by default and shown on request', () => {
+  const list = [
+    { id: 'r', media_product_type: 'REELS', is_shared_to_feed: true },
+    { id: 't', media_product_type: 'REELS', is_shared_to_feed: false },
+    { id: 'p', media_product_type: 'FEED', is_shared_to_feed: false },
+  ];
+  assert.deepEqual(filterAndSortMedia(list).map((m) => m.id).sort(), ['p', 'r']);
+  assert.equal(filterAndSortMedia(list, { hideTrials: false }).length, 3);
+});

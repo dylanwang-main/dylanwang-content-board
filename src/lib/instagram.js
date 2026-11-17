@@ -45,3 +45,28 @@ export function instagramEndpoint(token, igUserId) {
   if (!id) throw new Error('Add your Instagram account ID in Settings → Channels (the number under your username in Meta).');
   return { base: 'https://graph.facebook.com/v21.0', node: id };
 }
+
+// Per-post insights, the numbers Instagram shows under "View insights".
+// Each metric is asked for on its own so one unsupported metric doesn't sink the rest.
+export const REEL_METRICS = ['views', 'reach', 'likes', 'comments', 'shares', 'saved', 'follows', 'profile_visits', 'ig_reels_avg_watch_time', 'ig_reels_video_view_total_time'];
+export const POST_METRICS = ['views', 'reach', 'likes', 'comments', 'shares', 'saved', 'follows', 'profile_visits'];
+
+export async function fetchMediaInsights({ token, igUserId, mediaId, reel }, fetchImpl = fetch) {
+  const { base } = instagramEndpoint(token, igUserId);
+  const metrics = reel ? REEL_METRICS : POST_METRICS;
+  const results = await Promise.all(
+    metrics.map(async (metric) => {
+      try {
+        const res = await fetchImpl(
+          `${base}/${mediaId}/insights?metric=${metric}&access_token=${encodeURIComponent(token)}`
+        );
+        const data = await res.json();
+        const value = data?.data?.[0]?.values?.[0]?.value ?? data?.data?.[0]?.total_value?.value;
+        return res.ok && typeof value === 'number' ? [metric, value] : null;
+      } catch {
+        return null;
+      }
+    })
+  );
+  return Object.fromEntries(results.filter(Boolean));
+}

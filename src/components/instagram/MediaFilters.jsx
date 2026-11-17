@@ -46,6 +46,16 @@ export default function MediaFilters({ value, onChange, shown, total }) {
           ))}
         </div>
 
+        <button
+          type="button"
+          onClick={() => set({ hideTrials: !value.hideTrials })}
+          className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+            value.hideTrials ? "border-primary/40 bg-primary/15 text-primary" : "border-border text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          {value.hideTrials ? "Trials hidden" : "Trials shown"}
+        </button>
+
         <Select value={value.sort} onValueChange={(sort) => set({ sort })}>
           <SelectTrigger className="w-full rounded-lg sm:w-48">
             <SelectValue />
