@@ -35,7 +35,7 @@ export default function PipelineCard({ item, index, onOpen }) {
           }}
           className={`group relative mb-2 cursor-pointer rounded-xl border bg-card p-3 transition-colors ${
             snapshot.isDragging
-              ? "border-primary shadow-lg shadow-primary/20"
+              ? "border-primary shadow-sm"
               : "border-border/70 hover:border-primary/40"
           }`}
         >

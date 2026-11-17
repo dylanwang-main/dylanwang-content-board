@@ -80,7 +80,7 @@ export default function ContentForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
-        <div className="space-y-4 rounded-2xl border border-border/60 bg-card/70 p-4 sm:p-6">
+        <div className="space-y-4 rounded-xl border border-border/60 bg-card/70 p-4 sm:p-6">
           <Input
             value={values.title}
             onChange={(event) => set("title", event.target.value)}

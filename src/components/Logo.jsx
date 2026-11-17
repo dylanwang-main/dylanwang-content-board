@@ -3,15 +3,9 @@ import { Link } from "react-router-dom";
 
 export default function Logo({ className = "" }) {
   return (
-    <Link
-      to="/"
-      className={`inline-flex items-baseline gap-[6px] leading-none ${className}`}
-      aria-label="Content Dashboard"
-    >
-      <span className="font-logo text-[26px] leading-none text-primary">Content</span>
-      <span className="font-heading text-[13px] font-semibold uppercase leading-none tracking-[0.18em] text-foreground">
-        Dashboard
-      </span>
+    <Link to="/" className={`inline-flex items-center gap-2 leading-none ${className}`} aria-label="Content Dashboard">
+      <span className="h-2.5 w-2.5 rounded-full bg-primary" aria-hidden="true" />
+      <span className="font-logo text-[20px] font-semibold tracking-tight text-foreground">Content Dashboard</span>
     </Link>
   );
 }

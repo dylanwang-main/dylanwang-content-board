@@ -11,7 +11,7 @@ export default function TikTokDetailDialog({ item, onClose }) {
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[92vh] max-w-2xl overflow-y-auto rounded-2xl">
+      <DialogContent className="max-h-[92vh] max-w-2xl overflow-y-auto rounded-xl">
         <DialogTitle className="sr-only">TikTok video</DialogTitle>
 
         {item.cover_image_url && (

@@ -48,7 +48,7 @@ export default function SectionUploader({ section }) {
           event.preventDefault();
           handleFiles(event.dataTransfer.files);
         }}
-        className="flex w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-primary/40 bg-accent/40 px-6 py-8 text-center transition-colors hover:bg-accent/70 disabled:cursor-not-allowed"
+        className="flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-primary/40 bg-accent/40 px-6 py-8 text-center transition-colors hover:bg-accent/70 disabled:cursor-not-allowed"
       >
         {busy ? (
           <Loader2 className="h-5 w-5 animate-spin text-primary" />

@@ -34,7 +34,7 @@ export default function ChannelConnections({ accounts = [] }) {
   const mutations = { instagram: syncInstagram, tiktok: syncTikTok, youtube: syncYouTube };
 
   return (
-    <div className="rounded-2xl border border-border/70 bg-card/70 px-4 py-2 sm:px-5">
+    <div className="rounded-xl border border-border/70 bg-card/70 px-4 py-2 sm:px-5">
       {PLATFORMS.map(({ key, label, icon: Icon, color }) => {
         const account = accountFor(key);
         const sync = mutations[key];

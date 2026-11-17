@@ -96,7 +96,7 @@ export default function SettingsForm({ me }) {
           <Button
             type="submit"
             disabled={save.isPending}
-            className="rounded-full shadow-lg shadow-primary/30"
+            className="rounded-full shadow-sm"
           >
             {save.isPending ? <Loader2 className="animate-spin" /> : justSaved ? <Check /> : null}
             {justSaved ? "Saved" : "Save changes"}

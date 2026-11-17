@@ -24,7 +24,7 @@ export default function SidebarLink({ item }) {
             className={cn(
               "flex h-8 w-8 items-center justify-center rounded-lg",
               isActive
-                ? "bg-gold-gradient text-primary-foreground shadow-md shadow-primary/25"
+                ? "bg-primary text-primary-foreground shadow-sm"
                 : "border border-sidebar-border bg-background group-hover:border-primary/40"
             )}
           >

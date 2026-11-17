@@ -86,7 +86,7 @@ export default function BrandForm({ brand }) {
       </FormSection>
 
       <div className="sticky bottom-20 z-30 flex justify-end pt-2">
-        <Button type="submit" disabled={save.isPending} className="shadow-lg shadow-primary/30">
+        <Button type="submit" disabled={save.isPending} className=" shadow-sm">
           {save.isPending ? <Loader2 className="animate-spin" /> : justSaved && <Check />}
           {justSaved ? "Saved" : "Save brand"}
         </Button>

@@ -6,7 +6,7 @@ export default function PipelineColumn({ status, label, items, onOpen }) {
   return (
     <Droppable droppableId={status}>
       {(provided, snapshot) => (
-        <div className="flex w-64 shrink-0 flex-col rounded-2xl border border-border/70 bg-card/40 p-3 lg:w-auto">
+        <div className="flex w-64 shrink-0 flex-col rounded-xl border border-border/70 bg-card/40 p-3 lg:w-auto">
           <div className="mb-3 flex items-center gap-2">
             <span className={`h-2 w-2 rounded-full ${STATUS_BARS[status] || ""}`} />
             <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">

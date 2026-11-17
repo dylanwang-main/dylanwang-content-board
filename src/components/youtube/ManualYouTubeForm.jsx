@@ -82,7 +82,7 @@ export default function ManualYouTubeForm({ onOpenPipeline }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-5 rounded-2xl border border-border/70 bg-card p-5 sm:p-6"
+      className="space-y-5 rounded-xl border border-border/70 bg-card p-5 sm:p-6"
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Title">

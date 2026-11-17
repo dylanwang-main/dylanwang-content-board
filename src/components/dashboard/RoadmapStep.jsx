@@ -2,7 +2,7 @@ export default function RoadmapStep({ step, index }) {
   const actions = step.actions || [];
 
   return (
-    <li className="rounded-2xl border border-border/60 p-4">
+    <li className="rounded-xl border border-border/60 p-4">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-primary text-[11px] font-medium text-primary">
           {index + 1}

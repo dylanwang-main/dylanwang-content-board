@@ -5,7 +5,7 @@ export default function SectionNavButton({ section, count, active, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className={`flex shrink-0 items-center gap-2.5 rounded-2xl border px-3.5 py-3 text-left text-sm transition-colors lg:w-full ${
+      className={`flex shrink-0 items-center gap-2.5 rounded-xl border px-3.5 py-3 text-left text-sm transition-colors lg:w-full ${
         active
           ? "border-primary/40 bg-primary/5 text-primary"
           : "border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground"

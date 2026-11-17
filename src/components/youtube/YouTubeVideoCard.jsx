@@ -50,7 +50,7 @@ export default function YouTubeVideoCard({ video }) {
   const whyItWorks = Array.isArray(video.why_it_works) ? video.why_it_works : [];
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-border/70 bg-card transition-colors hover:border-primary/40">
+    <article className="overflow-hidden rounded-xl border border-border/70 bg-card transition-colors hover:border-primary/40">
       <a href={video.url} target="_blank" rel="noreferrer" className="group block">
         <div className="relative aspect-video bg-secondary">
           {video.thumbnail_url && (

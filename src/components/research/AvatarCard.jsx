@@ -6,7 +6,7 @@ export default function AvatarCard({ label, avatar, highlighted = false }) {
 
   return (
     <div
-      className={`rounded-3xl border p-5 ${
+      className={`rounded-xl border p-5 ${
         highlighted ? "border-primary/50 bg-primary/5" : "border-border/60 bg-card/70"
       }`}
     >

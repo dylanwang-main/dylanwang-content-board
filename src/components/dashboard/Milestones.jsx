@@ -24,7 +24,7 @@ export default function Milestones({ items = [], brainFiles = [], research = [],
   const next = milestones.find((milestone) => !milestone.done);
 
   return (
-    <section className="rounded-3xl border border-border/60 bg-card p-6 shadow-xl shadow-black/5 sm:p-8">
+    <section className="rounded-xl border border-border/60 bg-card p-6 shadow-sm sm:p-8">
       <div className="mb-5 flex items-baseline justify-between gap-3">
         <h2 className="font-heading text-xl font-semibold">Milestones</h2>
         <p className="text-xs text-muted-foreground">

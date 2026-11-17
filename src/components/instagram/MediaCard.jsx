@@ -42,7 +42,7 @@ export default function MediaCard({ item }) {
     <>
       <article
         onClick={() => setOpen(true)}
-        className="group relative cursor-pointer overflow-hidden rounded-2xl border border-border/70 bg-card transition-colors hover:border-primary/40"
+        className="group relative cursor-pointer overflow-hidden rounded-xl border border-border/70 bg-card transition-colors hover:border-primary/40"
       >
         <div className="relative aspect-square">
           {item.thumbnail_url ? (

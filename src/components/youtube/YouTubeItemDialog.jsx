@@ -52,14 +52,14 @@ export default function YouTubeItemDialog({ item, onClose }) {
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[92vh] w-[calc(100vw-1.5rem)] max-w-4xl overflow-y-auto rounded-2xl">
+      <DialogContent className="max-h-[92vh] w-[calc(100vw-1.5rem)] max-w-4xl overflow-y-auto rounded-xl">
         <DialogHeader>
           <DialogTitle className="text-[11px] font-medium uppercase tracking-[0.18em] text-primary">
             YouTube plan
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 rounded-2xl border border-border/70 p-4">
+        <div className="space-y-4 rounded-xl border border-border/70 p-4">
           <Field label="Title">
             <Input
               className="rounded-xl"

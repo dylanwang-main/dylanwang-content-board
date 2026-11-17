@@ -39,7 +39,7 @@ export default function MetricsFields({ values, onChange, itemId }) {
   };
 
   return (
-    <div className="rounded-2xl border border-primary/15 bg-primary/3 p-4 sm:p-6">
+    <div className="rounded-xl border border-primary/15 bg-primary/3 p-4 sm:p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="max-w-xl">
           <h3 className="font-heading text-lg font-light">Results</h3>

@@ -47,7 +47,7 @@ export default function YouTubeCreate({ onOpenPipeline }) {
 
       {mode === "ai" ? (
         <div className="space-y-6">
-          <div className="rounded-2xl border border-border/70 bg-card p-5 sm:p-6">
+          <div className="rounded-xl border border-border/70 bg-card p-5 sm:p-6">
             <Field label="Video topic">
               <Input
                 className="rounded-xl"

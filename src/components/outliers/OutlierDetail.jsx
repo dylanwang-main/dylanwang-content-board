@@ -62,7 +62,7 @@ export default function OutlierDetail({ outlier, onClose }) {
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[92vh] w-[calc(100vw-1.5rem)] max-w-3xl overflow-y-auto rounded-2xl">
+      <DialogContent className="max-h-[92vh] w-[calc(100vw-1.5rem)] max-w-3xl overflow-y-auto rounded-xl">
         <DialogHeader>
           <DialogTitle className="text-[11px] font-medium uppercase tracking-[0.18em] text-primary">
             Outlier

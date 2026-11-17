@@ -12,7 +12,7 @@ const PLATFORMS = [
 
 function ChannelCard({ label, icon: Icon, tint, account }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-background/40 p-4">
+    <div className="rounded-xl border border-border/70 bg-background/40 p-4">
       <div className="flex items-center gap-2">
         <Icon className={`h-4 w-4 ${tint}`} strokeWidth={1.75} />
         <span className="text-sm font-medium">{label}</span>

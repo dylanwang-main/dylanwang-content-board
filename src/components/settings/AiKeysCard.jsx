@@ -76,7 +76,7 @@ export default function AiKeysCard() {
   const live = Boolean(useSyncExternalStore(subscribe, getAnthropicKey));
 
   return (
-    <section className="space-y-5 rounded-3xl border border-border/70 bg-card/70 p-6 shadow-lg shadow-black/20">
+    <section className="space-y-5 rounded-xl border border-border/70 bg-card/70 p-6 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-[18px] font-semibold">AI and API keys</h2>

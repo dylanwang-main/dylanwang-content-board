@@ -2,7 +2,7 @@ import LibraryRow from "@/components/library/LibraryRow";
 
 export default function ContentLibraryList({ items, onSelect }) {
   return (
-    <div className="rounded-2xl border border-border/60 bg-card/70 p-2 sm:p-3">
+    <div className="rounded-xl border border-border/60 bg-card/70 p-2 sm:p-3">
       {items.length === 0 ? (
         <p className="py-10 text-center text-sm text-muted-foreground">
           Nothing matches these filters.

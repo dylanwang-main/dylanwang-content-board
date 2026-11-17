@@ -11,7 +11,7 @@ export default function MediaDetailDialog({ item, onClose }) {
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[92vh] max-w-2xl overflow-y-auto rounded-2xl">
+      <DialogContent className="max-h-[92vh] max-w-2xl overflow-y-auto rounded-xl">
         <DialogTitle className="sr-only">Instagram post</DialogTitle>
 
         {item.thumbnail_url && (

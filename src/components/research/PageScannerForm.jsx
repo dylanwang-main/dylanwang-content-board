@@ -33,7 +33,7 @@ export default function PageScannerForm({ onStarted }) {
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-3xl border border-border/60 bg-card/80 p-6 shadow-xl shadow-black/5"
+      className="rounded-xl border border-border/60 bg-card/80 p-6 shadow-sm"
     >
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
