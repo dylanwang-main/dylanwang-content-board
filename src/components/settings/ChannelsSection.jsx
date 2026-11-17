@@ -292,6 +292,7 @@ function TikTokRow() {
   const queryClient = useQueryClient();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
+  const [open, setOpen] = useState(false);
   const account = accounts.find((a) => (a.platform || "").toLowerCase() === "tiktok");
   const connected = Boolean(me?.tiktok_connected_at);
 
@@ -336,24 +337,51 @@ function TikTokRow() {
       name="TikTok"
       status={status}
       actions={
-        connected ? (
+        connected && !open ? (
           <>
-            <Button variant="ghost" size="sm" className="text-destructive" onClick={disconnect} disabled={busy}>
-              Disconnect
+            <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
+              Edit
             </Button>
             <Button variant="outline" size="sm" onClick={() => sync.mutate()} disabled={sync.isPending || busy}>
               {sync.isPending ? <Loader2 className="animate-spin" /> : <RefreshCw />}
               {sync.isPending ? "Syncing…" : "Sync"}
             </Button>
           </>
-        ) : (
+        ) : !connected ? (
           <Button size="sm" onClick={connect} disabled={busy}>
             {busy && <Loader2 className="animate-spin" />}
             Connect
           </Button>
-        )
+        ) : null
       }
     >
+      {open && (
+        <div className="flex flex-wrap items-center gap-2 border-t border-border bg-background/40 px-4 py-4 sm:pl-[46px]">
+          <p className="w-full text-xs text-muted-foreground">
+            Connected through TikTok login. Reconnect if sync stops working.
+          </p>
+          <Button size="sm" onClick={connect} disabled={busy}>
+            {busy && <Loader2 className="animate-spin" />}
+            Reconnect
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="ml-auto text-destructive"
+            onClick={async () => {
+              await disconnect();
+              setOpen(false);
+            }}
+            disabled={busy}
+          >
+            Disconnect
+          </Button>
+        </div>
+      )}
       {(error || sync.isError) && (
         <p className="px-4 pb-3 text-xs text-destructive sm:pl-[46px]">{error || sync.error.message}</p>
       )}
