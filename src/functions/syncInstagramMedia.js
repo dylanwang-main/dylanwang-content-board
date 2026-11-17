@@ -24,7 +24,7 @@ export default async function (req) {
     const token = connection && connection.accessToken;
     if (!token) {
       return Response.json(
-        { error: 'Instagram is not connected yet. Connect the Instagram Business account, then press Sync now.' },
+        { error: 'Instagram is not connected yet. Add your token in Settings → Channels.' },
         { status: 400 }
       );
     }

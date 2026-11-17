@@ -6,10 +6,12 @@ import { Input } from "@/components/ui/input";
 import { useMe, useSaveMe } from "@/hooks/useCreatorData";
 import { useSocialAccounts } from "@/hooks/useSocialAccounts";
 import { useSyncYouTube } from "@/hooks/useYouTube";
+import { useSyncInstagram } from "@/hooks/useInstagram";
 import { getYouTubeKey, setYouTubeKey } from "@/ai/keys";
 import { compact } from "@/lib/insights";
 
 const KEY_HELP_URL = "https://console.cloud.google.com/apis/library/youtube.googleapis.com";
+const META_APPS_URL = "https://developers.facebook.com/apps/";
 
 const subscribeKeys = (cb) => {
   window.addEventListener("cc-keys-changed", cb);
@@ -158,6 +160,113 @@ function YouTubeRow() {
   );
 }
 
+function InstagramRow() {
+  const { data: me } = useMe();
+  const { data: accounts = [] } = useSocialAccounts();
+  const saveMe = useSaveMe();
+  const sync = useSyncInstagram();
+  const account = accounts.find((a) => (a.platform || "").toLowerCase() === "instagram");
+  const connected = Boolean(me?.instagram_token);
+  const [open, setOpen] = useState(false);
+  const [token, setToken] = useState("");
+
+  const connect = async (e) => {
+    e.preventDefault();
+    await saveMe.mutateAsync({
+      instagram_token: token.trim(),
+      // Unknown age: refresh it on the first sync.
+      instagram_token_refreshed_at: null,
+    });
+    setToken("");
+    setOpen(false);
+    sync.mutate();
+  };
+
+  const disconnect = async () => {
+    await saveMe.mutateAsync({ instagram_token: null, instagram_token_refreshed_at: null });
+    setOpen(false);
+  };
+
+  const busy = sync.isPending || saveMe.isPending;
+  const lastSynced = synced(account?.last_synced);
+  const status = connected
+    ? [
+        account?.handle,
+        account && `${compact(account.follower_count)} followers`,
+        account && `${compact(account.media_count)} posts`,
+        lastSynced ? `synced ${lastSynced}` : "not synced yet",
+      ]
+        .filter(Boolean)
+        .join(" · ")
+    : "Not connected · creator or business account";
+
+  return (
+    <Row
+      icon={Instagram}
+      name="Instagram"
+      status={status}
+      actions={
+        connected && !open ? (
+          <>
+            <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
+              Edit
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => sync.mutate()} disabled={busy}>
+              {sync.isPending ? <Loader2 className="animate-spin" /> : <RefreshCw />}
+              {sync.isPending ? "Syncing…" : "Sync"}
+            </Button>
+          </>
+        ) : !open ? (
+          <Button size="sm" onClick={() => setOpen(true)}>
+            Connect
+          </Button>
+        ) : null
+      }
+    >
+      {open && (
+        <form onSubmit={connect} className="space-y-4 border-t border-border bg-background/40 px-4 py-4 sm:pl-[46px]">
+          <label className="block space-y-1.5">
+            <span className="text-xs text-muted-foreground">
+              Instagram access token{connected ? " (paste a new one to replace)" : ""}
+            </span>
+            <Input
+              type="password"
+              autoComplete="off"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
+              placeholder="IGAA…"
+              required
+            />
+          </label>
+          <p className="text-xs text-muted-foreground">
+            From your app in{" "}
+            <a href={META_APPS_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-foreground underline underline-offset-2">
+              Meta for Developers <ExternalLink className="h-3 w-3" />
+            </a>
+            : Use cases → Customize → API setup with Instagram login → Generate token. It's saved to your account only and
+            refreshed automatically.
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button type="submit" size="sm" disabled={busy || !token.trim()}>
+              {busy && <Loader2 className="animate-spin" />}
+              {connected ? "Save & sync" : "Connect & sync"}
+            </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            {connected && (
+              <Button type="button" variant="ghost" size="sm" className="ml-auto text-destructive" onClick={disconnect}>
+                Disconnect
+              </Button>
+            )}
+          </div>
+        </form>
+      )}
+      {sync.isError && <p className="px-4 pb-3 text-xs text-destructive sm:pl-[46px]">{sync.error.message}</p>}
+    </Row>
+  );
+}
+
 // Every channel in one list: what's connected, what isn't, one button each.
 export default function ChannelsSection() {
   return (
@@ -168,17 +277,12 @@ export default function ChannelsSection() {
       </div>
       <ul className="rounded-lg border border-border bg-card">
         <YouTubeRow />
-        <Row
-          icon={Instagram}
-          name="Instagram"
-          status="Not available yet · needs Meta app approval"
-          actions={<span className="text-xs text-muted-foreground">Coming later</span>}
-        />
+        <InstagramRow />
         <Row
           icon={Music2}
           name="TikTok"
-          status="Not available yet · needs TikTok app approval"
-          actions={<span className="text-xs text-muted-foreground">Coming later</span>}
+          status="Not connected · setup coming next"
+          actions={<span className="text-xs text-muted-foreground">Soon</span>}
         />
       </ul>
     </section>

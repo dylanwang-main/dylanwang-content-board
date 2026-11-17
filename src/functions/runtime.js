@@ -6,6 +6,7 @@
 import { api } from '@/api/db';
 import { invokeLLM } from '@/ai/llm';
 import { getYouTubeKey } from '@/ai/keys';
+import { instagramToken } from '@/lib/instagram';
 
 function notAvailable(what) {
   return async () => {
@@ -37,9 +38,13 @@ const client = {
     integrations: { Core },
     connectors: {
       getConnection: async (platform) => {
-        throw new Error(
-          `Connecting ${platform === 'tiktok' ? 'TikTok' : 'Instagram'} needs a developer app review, so sync is off in this version.`,
-        );
+        if (platform === 'instagram') {
+          const me = await api.auth.me();
+          const accessToken = await instagramToken(me, (data) => api.auth.updateMe(data));
+          if (!accessToken) throw new Error('Instagram is not connected.');
+          return { accessToken };
+        }
+        throw new Error('TikTok sync is not set up yet.');
       },
     },
   },
