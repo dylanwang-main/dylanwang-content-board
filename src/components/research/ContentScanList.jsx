@@ -6,7 +6,7 @@ export default function ContentScanList({ scans, selectedId, onSelect }) {
 
   return (
     <div>
-      <h3 className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Scans</h3>
+      <h3 className="text-xs text-muted-foreground">Scans</h3>
 
       <div className="mt-3 space-y-2">
         {scans.map((scan) => (

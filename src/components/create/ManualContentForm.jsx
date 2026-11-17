@@ -71,7 +71,7 @@ export default function ManualContentForm({ me, brand, initialStatus = "draft" }
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-xl border border-border/60 bg-card/70 p-6 sm:p-8"
+      className="rounded-lg border border-border/60 bg-card/70 p-6 sm:p-8"
     >
       <div className="grid gap-4 sm:grid-cols-3">
         <FieldSelect
@@ -110,7 +110,7 @@ export default function ManualContentForm({ me, brand, initialStatus = "draft" }
 
         <Field label="Title">
           <Input
-            className="rounded-xl"
+            className="rounded-lg"
             value={form.title}
             onChange={(event) => set("title", event.target.value)}
           />
@@ -120,7 +120,7 @@ export default function ManualContentForm({ me, brand, initialStatus = "draft" }
       <div className="mt-4">
         <Field label="Hook" hint="The opening line that grabs attention">
           <Input
-            className="rounded-xl"
+            className="rounded-lg"
             value={form.hook}
             onChange={(event) => set("hook", event.target.value)}
           />
@@ -130,7 +130,7 @@ export default function ManualContentForm({ me, brand, initialStatus = "draft" }
       <div className="mt-4">
         <Field label="Script">
           <Textarea
-            className="rounded-xl"
+            className="rounded-lg"
             style={{ minHeight: 220 }}
             placeholder="Write your script, caption or outline…"
             value={form.script}
@@ -142,7 +142,7 @@ export default function ManualContentForm({ me, brand, initialStatus = "draft" }
       <div className="mt-4">
         <Field label="Caption (optional)">
           <Textarea
-            className="rounded-xl"
+            className="rounded-lg"
             value={form.caption}
             onChange={(event) => set("caption", event.target.value)}
           />
@@ -152,7 +152,7 @@ export default function ManualContentForm({ me, brand, initialStatus = "draft" }
       <div className="mt-4">
         <Field label="Notes (optional)">
           <Textarea
-            className="rounded-xl"
+            className="rounded-lg"
             value={form.notes}
             onChange={(event) => set("notes", event.target.value)}
           />

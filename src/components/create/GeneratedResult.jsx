@@ -11,7 +11,7 @@ export default function GeneratedResult({ result, className = "" }) {
   return (
     <div className={`space-y-5 ${className}`}>
       <Panel>
-        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">Topic</p>
+        <p className="text-[10px] font-bold text-primary">Topic</p>
         {result.title && (
           <h3 className="mt-3 font-heading text-3xl font-light tracking-tight">{result.title}</h3>
         )}
@@ -35,7 +35,7 @@ export default function GeneratedResult({ result, className = "" }) {
         )}
 
         {result.cta && (
-          <div className="mt-3 rounded-xl border border-primary/25 bg-accent/40 p-4 text-sm">
+          <div className="mt-3 rounded-lg border border-primary/25 bg-accent/40 p-4 text-sm">
             <span className="font-semibold text-primary">CTA · </span>
             {result.cta}
           </div>

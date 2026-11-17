@@ -21,7 +21,7 @@ export default function ItemList({ title, items, emptyMessage, dateField }) {
               <li key={item.id}>
                 <Link
                   to={`/library?open=${item.id}`}
-                  className="flex items-center justify-between gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-accent"
+                  className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-accent"
                 >
                   <span className="min-w-0 truncate text-sm">{item.title}</span>
                   {hasDate ? (

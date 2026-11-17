@@ -24,7 +24,7 @@ function KeyField({ label, hint, placeholder, getKey, setKey }) {
   if (saved) {
     return (
       <Field label={label} hint={hint}>
-        <div className="flex items-center justify-between gap-3 rounded-xl border border-border/70 px-4 py-3">
+        <div className="flex items-center justify-between gap-3 rounded-lg border border-border/70 px-4 py-3">
           <span className="font-mono text-sm text-muted-foreground">{mask(saved)}</span>
           <Button type="button" variant="ghost" size="sm" className="rounded-full" onClick={() => setKey("")}>
             Remove
@@ -44,7 +44,7 @@ function KeyField({ label, hint, placeholder, getKey, setKey }) {
             placeholder={placeholder}
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            className="rounded-xl pr-10"
+            className="rounded-lg pr-10"
           />
           <button
             type="button"
@@ -76,7 +76,7 @@ export default function AiKeysCard() {
   const live = Boolean(useSyncExternalStore(subscribe, getAnthropicKey));
 
   return (
-    <section className="space-y-5 rounded-xl border border-border/70 bg-card/70 p-6 shadow-sm">
+    <section className="space-y-5 rounded-lg border border-border/70 bg-card/70 p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-[18px] font-semibold">AI and API keys</h2>
@@ -96,7 +96,7 @@ export default function AiKeysCard() {
       </div>
 
       {!live && (
-        <p className="rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-muted-foreground">
+        <p className="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-muted-foreground">
           Without a key, every AI feature returns clearly labeled sample output, so you can try the whole app for
           free.
         </p>

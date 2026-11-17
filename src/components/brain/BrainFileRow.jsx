@@ -27,7 +27,7 @@ export default function BrainFileRow({ file }) {
   };
 
   return (
-    <div className="rounded-xl border border-border/60 p-3.5">
+    <div className="rounded-lg border border-border/60 p-3.5">
       <div className="flex items-start gap-3">
         <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
 

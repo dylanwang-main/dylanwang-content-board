@@ -6,11 +6,11 @@ export default function AvatarCard({ label, avatar, highlighted = false }) {
 
   return (
     <div
-      className={`rounded-xl border p-5 ${
+      className={`rounded-lg border p-5 ${
         highlighted ? "border-primary/50 bg-primary/5" : "border-border/60 bg-card/70"
       }`}
     >
-      <p className="text-xs uppercase tracking-[0.18em] text-primary">{label}</p>
+      <p className="text-xs text-primary">{label}</p>
       <h3 className="mt-2 font-heading text-xl">{avatar.name}</h3>
       {avatar.description && (
         <p className="mt-1 text-sm text-muted-foreground">{avatar.description}</p>

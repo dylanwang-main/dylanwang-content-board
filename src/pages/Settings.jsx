@@ -27,7 +27,7 @@ export default function Settings() {
           <SettingsForm me={me} />
           <AiKeysCard />
           <ConnectedChannels />
-          <div className="flex items-center justify-between rounded-xl border border-border/70 bg-card/70 p-6">
+          <div className="flex items-center justify-between rounded-lg border border-border/70 bg-card/70 p-6">
             <p className="text-sm text-muted-foreground">
               {isGuest ? (
                 "You're using a demo workspace."

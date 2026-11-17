@@ -25,7 +25,7 @@ export default function LogoUpload({ value, onChange }) {
 
   return (
     <div className="flex flex-wrap items-center gap-4">
-      <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-xl border border-border/70 bg-secondary/40">
+      <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-lg border border-border/70 bg-secondary/40">
         {value ? (
           <Image src={value} alt="Your logo" className="h-full w-full" fittingType="fit" />
         ) : (

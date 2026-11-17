@@ -5,7 +5,7 @@ export default function MilestoneButton({ label, done, onToggle }) {
     <button
       type="button"
       onClick={onToggle}
-      className={`group flex items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
+      className={`group flex items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm transition-colors ${
         done ? "border-primary/40 bg-primary/5" : "border-border hover:border-primary/40"
       }`}
     >

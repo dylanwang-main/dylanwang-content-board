@@ -37,9 +37,9 @@ export default function ContentDialog({ item, onClose, platforms, pillars }) {
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[92vh] w-[calc(100vw-1.5rem)] max-w-5xl overflow-y-auto rounded-xl">
+      <DialogContent className="max-h-[92vh] w-[calc(100vw-1.5rem)] max-w-5xl overflow-y-auto rounded-lg">
         <DialogHeader>
-          <DialogTitle className="text-[11px] font-medium uppercase tracking-[0.18em] text-primary">
+          <DialogTitle className="text-[11px] font-medium text-primary">
             Edit piece
           </DialogTitle>
         </DialogHeader>

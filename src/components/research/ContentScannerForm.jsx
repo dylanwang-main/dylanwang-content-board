@@ -23,7 +23,7 @@ export default function ContentScannerForm({ onStarted }) {
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-xl border border-border/60 bg-card/80 p-6 shadow-sm"
+      className="rounded-lg border border-border/60 bg-card/80 p-6"
     >
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -44,7 +44,7 @@ export default function ContentScannerForm({ onStarted }) {
 
         <Field label="Post or video link">
           <Input
-            className="rounded-xl"
+            className="rounded-lg"
             value={url}
             onChange={(event) => setUrl(event.target.value)}
             placeholder="e.g. youtube.com/watch?v=..."

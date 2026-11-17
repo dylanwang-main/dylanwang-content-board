@@ -17,7 +17,7 @@ export default function VideoFilters({ value, onChange, shown, total }) {
             value={value.query}
             onChange={(e) => set({ query: e.target.value })}
             placeholder="Search titles and descriptions…"
-            className="rounded-xl pl-9 pr-9"
+            className="rounded-lg pl-9 pr-9"
           />
           {value.query && (
             <button
@@ -47,7 +47,7 @@ export default function VideoFilters({ value, onChange, shown, total }) {
         </div>
 
         <Select value={value.sort} onValueChange={(sort) => set({ sort })}>
-          <SelectTrigger className="w-full rounded-xl sm:w-48">
+          <SelectTrigger className="w-full rounded-lg sm:w-48">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

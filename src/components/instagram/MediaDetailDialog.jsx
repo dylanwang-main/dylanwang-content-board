@@ -11,14 +11,14 @@ export default function MediaDetailDialog({ item, onClose }) {
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[92vh] max-w-2xl overflow-y-auto rounded-xl">
+      <DialogContent className="max-h-[92vh] max-w-2xl overflow-y-auto rounded-lg">
         <DialogTitle className="sr-only">Instagram post</DialogTitle>
 
         {item.thumbnail_url && (
           <img
             src={item.thumbnail_url}
             alt=""
-            className="max-h-72 w-full rounded-xl object-cover"
+            className="max-h-72 w-full rounded-lg object-cover"
           />
         )}
 
@@ -42,7 +42,7 @@ export default function MediaDetailDialog({ item, onClose }) {
           <div className="mt-6 space-y-5">
             {item.hook && (
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] font-medium text-muted-foreground">
                   Hook
                 </p>
                 <p className="mt-1.5 text-sm italic text-primary">{item.hook}</p>
@@ -51,7 +51,7 @@ export default function MediaDetailDialog({ item, onClose }) {
 
             {item.summary && (
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] font-medium text-muted-foreground">
                   Summary
                 </p>
                 <p className="mt-1.5 text-sm leading-relaxed text-foreground/90">{item.summary}</p>
@@ -60,7 +60,7 @@ export default function MediaDetailDialog({ item, onClose }) {
 
             {Array.isArray(item.why_it_works) && item.why_it_works.length > 0 && (
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] font-medium text-muted-foreground">
                   Why it works
                 </p>
                 <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-foreground/90">
@@ -72,8 +72,8 @@ export default function MediaDetailDialog({ item, onClose }) {
             )}
 
             {item.transcript && (
-              <details className="rounded-xl border border-border/70 bg-background/40 p-3">
-                <summary className="cursor-pointer text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              <details className="rounded-lg border border-border/70 bg-background/40 p-3">
+                <summary className="cursor-pointer text-xs font-medium text-muted-foreground">
                   Transcript
                 </summary>
                 <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-relaxed text-foreground/80">

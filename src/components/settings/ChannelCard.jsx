@@ -14,7 +14,7 @@ export default function ChannelCard({
   children,
 }) {
   return (
-    <section className="rounded-xl border border-border/70 bg-card/70 p-5 shadow-sm sm:p-6">
+    <section className="rounded-lg border border-border/70 bg-card/70 p-5 sm:p-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Icon className={`h-4 w-4 ${tint}`} strokeWidth={1.75} />
@@ -41,9 +41,9 @@ export default function ChannelCard({
 
       <div className="mt-5 grid grid-cols-3 gap-3">
         {stats.map((stat) => (
-          <div key={stat.label} className="rounded-xl border border-border/60 bg-background/30 p-3">
+          <div key={stat.label} className="rounded-lg border border-border/60 bg-background/30 p-3">
             <p className="font-heading text-lg font-light">{stat.value}</p>
-            <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="text-[11px] text-muted-foreground">
               {stat.label}
             </p>
           </div>

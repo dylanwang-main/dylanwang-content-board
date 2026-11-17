@@ -10,7 +10,7 @@ export default function LibraryRow({ item, onSelect }) {
     <button
       type="button"
       onClick={() => onSelect(item.id)}
-      className="group flex w-full items-center gap-4 rounded-xl px-3 py-3 text-left transition-colors hover:bg-accent/50"
+      className="group flex w-full items-center gap-4 rounded-lg px-3 py-3 text-left transition-colors hover:bg-accent/50"
     >
       <div className="min-w-0 flex-1">
         <p className="truncate font-medium transition-colors group-hover:text-primary">

@@ -11,28 +11,15 @@ export default function SidebarLink({ item }) {
       end={to === "/"}
       className={({ isActive }) =>
         cn(
-          "group flex items-center gap-3 rounded-xl px-2 py-2 text-sm",
+          "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[13px] transition-colors",
           isActive
-            ? "font-semibold text-foreground"
-            : "font-medium text-sidebar-foreground hover:text-foreground"
+            ? "bg-secondary font-medium text-foreground"
+            : "text-sidebar-foreground hover:bg-secondary/60 hover:text-foreground"
         )
       }
     >
-      {({ isActive }) => (
-        <>
-          <span
-            className={cn(
-              "flex h-8 w-8 items-center justify-center rounded-lg",
-              isActive
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "border border-sidebar-border bg-background group-hover:border-primary/40"
-            )}
-          >
-            <Icon className="h-[15px] w-[15px]" strokeWidth={1.5} />
-          </span>
-          {label}
-        </>
-      )}
+      <Icon className="h-4 w-4 shrink-0" strokeWidth={1.75} />
+      {label}
     </NavLink>
   );
 }

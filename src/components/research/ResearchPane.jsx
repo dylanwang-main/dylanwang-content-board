@@ -5,7 +5,7 @@ export default function ResearchPane({ isLoading, isEmpty, children }) {
 
   if (isEmpty) {
     return (
-      <div className="rounded-xl border border-border/60 bg-card/80 p-10 text-center shadow-sm">
+      <div className="rounded-lg border border-border/60 bg-card/80 p-10 text-center">
         <p className="text-sm text-muted-foreground">
           No research yet. Run the page scanner to get started.
         </p>

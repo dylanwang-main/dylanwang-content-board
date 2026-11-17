@@ -10,7 +10,7 @@ export default function Roadmap() {
   const build = useBuildRoadmap();
 
   return (
-    <section className="rounded-xl border border-border/60 bg-card p-6 shadow-sm sm:p-8">
+    <section className="rounded-lg border border-border/60 bg-card p-6 sm:p-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h2 className="font-heading text-xl font-semibold">First $1,000 roadmap</h2>
@@ -43,7 +43,7 @@ export default function Roadmap() {
           )}
 
           {roadmap.revenue_math && (
-            <div className="mt-5 rounded-xl bg-primary/5 p-4 text-sm">{roadmap.revenue_math}</div>
+            <div className="mt-5 rounded-lg bg-primary/5 p-4 text-sm">{roadmap.revenue_math}</div>
           )}
         </div>
       )}

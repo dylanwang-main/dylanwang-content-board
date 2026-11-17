@@ -12,7 +12,7 @@ const PLATFORMS = [
 
 function ChannelCard({ label, icon: Icon, tint, account }) {
   return (
-    <div className="rounded-xl border border-border/70 bg-background/40 p-4">
+    <div className="rounded-lg border border-border/70 bg-background/40 p-4">
       <div className="flex items-center gap-2">
         <Icon className={`h-4 w-4 ${tint}`} strokeWidth={1.75} />
         <span className="text-sm font-medium">{label}</span>
@@ -26,11 +26,11 @@ function ChannelCard({ label, icon: Icon, tint, account }) {
           <div className="mt-3 flex items-baseline gap-4">
             <div>
               <p className="font-heading text-lg font-light">{formatNumber(account.follower_count)}</p>
-              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">followers</p>
+              <p className="text-[11px] text-muted-foreground">followers</p>
             </div>
             <div>
               <p className="font-heading text-lg font-light">{formatNumber(account.following_count)}</p>
-              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">following</p>
+              <p className="text-[11px] text-muted-foreground">following</p>
             </div>
           </div>
         </>

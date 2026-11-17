@@ -6,10 +6,10 @@ export default function PipelineColumn({ status, label, items, onOpen }) {
   return (
     <Droppable droppableId={status}>
       {(provided, snapshot) => (
-        <div className="flex w-64 shrink-0 flex-col rounded-xl border border-border/70 bg-card/40 p-3 lg:w-auto">
+        <div className="flex w-64 shrink-0 flex-col rounded-lg border border-border/70 bg-card/40 p-3 lg:w-auto">
           <div className="mb-3 flex items-center gap-2">
             <span className={`h-2 w-2 rounded-full ${STATUS_BARS[status] || ""}`} />
-            <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            <span className="text-[10px] font-medium text-muted-foreground">
               {label}
             </span>
             <span className="ml-auto font-heading text-sm font-light">{items.length}</span>
@@ -18,7 +18,7 @@ export default function PipelineColumn({ status, label, items, onOpen }) {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`max-h-[420px] min-h-[140px] flex-1 overflow-y-auto rounded-xl p-0.5 transition-colors ${
+            className={`max-h-[420px] min-h-[140px] flex-1 overflow-y-auto rounded-lg p-0.5 transition-colors ${
               snapshot.isDraggingOver ? "bg-primary/5" : ""
             }`}
           >

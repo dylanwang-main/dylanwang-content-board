@@ -11,14 +11,14 @@ export default function TikTokDetailDialog({ item, onClose }) {
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[92vh] max-w-2xl overflow-y-auto rounded-xl">
+      <DialogContent className="max-h-[92vh] max-w-2xl overflow-y-auto rounded-lg">
         <DialogTitle className="sr-only">TikTok video</DialogTitle>
 
         {item.cover_image_url && (
           <img
             src={item.cover_image_url}
             alt=""
-            className="mx-auto max-h-80 rounded-xl object-cover"
+            className="mx-auto max-h-80 rounded-lg object-cover"
           />
         )}
 
@@ -42,7 +42,7 @@ export default function TikTokDetailDialog({ item, onClose }) {
           <div className="mt-6 space-y-5">
             {item.hook && (
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] font-medium text-muted-foreground">
                   Hook
                 </p>
                 <p className="mt-1.5 text-sm italic text-primary">{item.hook}</p>
@@ -51,7 +51,7 @@ export default function TikTokDetailDialog({ item, onClose }) {
 
             {item.summary && (
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] font-medium text-muted-foreground">
                   Summary
                 </p>
                 <p className="mt-1.5 text-sm leading-relaxed text-foreground/90">{item.summary}</p>
@@ -60,7 +60,7 @@ export default function TikTokDetailDialog({ item, onClose }) {
 
             {Array.isArray(item.why_it_works) && item.why_it_works.length > 0 && (
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] font-medium text-muted-foreground">
                   Why it works
                 </p>
                 <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-foreground/90">

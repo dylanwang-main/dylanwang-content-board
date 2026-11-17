@@ -45,7 +45,7 @@ export default function SettingsForm({ me }) {
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Display name" hint={`Defaults to ${accountName}`}>
             <Input
-              className="rounded-xl"
+              className="rounded-lg"
               value={form.display_name}
               onChange={(event) => set("display_name", event.target.value)}
             />
@@ -53,7 +53,7 @@ export default function SettingsForm({ me }) {
 
           <Field label="Monthly publishing goal" hint="Pieces per month, tracked on your dashboard.">
             <Input
-              className="rounded-xl"
+              className="rounded-lg"
               type="number"
               min={1}
               placeholder="e.g. 12"
@@ -80,7 +80,7 @@ export default function SettingsForm({ me }) {
           hint="Used by the YouTube tab to sync your channel."
         >
           <Input
-            className="rounded-xl"
+            className="rounded-lg"
             placeholder="@yourchannel"
             value={form.youtube_handle}
             onChange={(event) => set("youtube_handle", event.target.value)}
@@ -96,7 +96,7 @@ export default function SettingsForm({ me }) {
           <Button
             type="submit"
             disabled={save.isPending}
-            className="rounded-full shadow-sm"
+            className="rounded-full"
           >
             {save.isPending ? <Loader2 className="animate-spin" /> : justSaved ? <Check /> : null}
             {justSaved ? "Saved" : "Save changes"}

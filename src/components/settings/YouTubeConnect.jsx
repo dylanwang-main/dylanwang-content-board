@@ -52,7 +52,7 @@ export default function YouTubeConnect() {
       <div className="mt-4">
         <Field label="Channel handle">
           <Input
-            className="rounded-xl"
+            className="rounded-lg"
             placeholder="@yourchannel"
             value={handle}
             onChange={(event) => setHandle(event.target.value)}

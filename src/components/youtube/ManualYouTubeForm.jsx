@@ -82,12 +82,12 @@ export default function ManualYouTubeForm({ onOpenPipeline }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-5 rounded-xl border border-border/70 bg-card p-5 sm:p-6"
+      className="space-y-5 rounded-lg border border-border/70 bg-card p-5 sm:p-6"
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Title">
           <Input
-            className="rounded-xl"
+            className="rounded-lg"
             value={form.title}
             onChange={(event) => set("title", event.target.value)}
             required
@@ -107,7 +107,7 @@ export default function ManualYouTubeForm({ onOpenPipeline }) {
 
       <Field label="Competitor channel (optional)">
         <Input
-          className="rounded-xl"
+          className="rounded-lg"
           placeholder="e.g. @creatorname"
           value={form.competitor}
           onChange={(event) => set("competitor", event.target.value)}
@@ -116,7 +116,7 @@ export default function ManualYouTubeForm({ onOpenPipeline }) {
 
       <Field label="Hook">
         <Textarea
-          className="rounded-xl"
+          className="rounded-lg"
           rows={2}
           value={form.hook}
           onChange={(event) => set("hook", event.target.value)}
@@ -125,7 +125,7 @@ export default function ManualYouTubeForm({ onOpenPipeline }) {
 
       <Field label="Main points" hint="One point per line.">
         <Textarea
-          className="rounded-xl"
+          className="rounded-lg"
           rows={5}
           value={form.points}
           onChange={(event) => set("points", event.target.value)}
@@ -134,7 +134,7 @@ export default function ManualYouTubeForm({ onOpenPipeline }) {
 
       <Field label="CTA">
         <Textarea
-          className="rounded-xl"
+          className="rounded-lg"
           rows={2}
           value={form.cta}
           onChange={(event) => set("cta", event.target.value)}
@@ -143,7 +143,7 @@ export default function ManualYouTubeForm({ onOpenPipeline }) {
 
       <Field label="Thumbnail concept">
         <Input
-          className="rounded-xl"
+          className="rounded-lg"
           value={form.thumbnail}
           onChange={(event) => set("thumbnail", event.target.value)}
         />
@@ -151,7 +151,7 @@ export default function ManualYouTubeForm({ onOpenPipeline }) {
 
       <Field label="Title options" hint="One per line, 3 to 5.">
         <Textarea
-          className="rounded-xl"
+          className="rounded-lg"
           rows={4}
           value={form.titles}
           onChange={(event) => set("titles", event.target.value)}
@@ -160,7 +160,7 @@ export default function ManualYouTubeForm({ onOpenPipeline }) {
 
       <Field label="Notes">
         <Textarea
-          className="rounded-xl"
+          className="rounded-lg"
           rows={3}
           value={form.notes}
           onChange={(event) => set("notes", event.target.value)}
