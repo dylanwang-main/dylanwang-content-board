@@ -3,6 +3,7 @@ import EmptyState from "@/components/kit/EmptyState";
 import PageHeader from "@/components/kit/PageHeader";
 import PageLoader from "@/components/kit/PageLoader";
 import GroupPanel from "@/components/performance/GroupPanel";
+import PostingHabits from "@/components/performance/PostingHabits";
 import ChannelsSection from "@/components/performance/channels/ChannelsSection";
 import PerformanceStats from "@/components/performance/PerformanceStats";
 import TopPiecesPanel from "@/components/performance/TopPiecesPanel";
@@ -24,6 +25,8 @@ export default function Performance() {
         title="What's resonating"
         description="Calculated from the results you log on published pieces."
       />
+
+      <PostingHabits />
 
       {isLoading ? (
         <PageLoader />
