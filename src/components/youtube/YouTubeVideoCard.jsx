@@ -4,6 +4,7 @@ import { format, parseISO } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useAnalyzeYouTubeVideo } from "@/hooks/useYouTube";
 import { formatNumber } from "@/lib/content";
+import { engagementRate } from "@/lib/videoFilters";
 
 const STATUS_PILLS = {
   synced: "bg-muted text-muted-foreground",
@@ -84,6 +85,7 @@ export default function YouTubeVideoCard({ video }) {
         <p className="text-xs text-muted-foreground">
           {formatNumber(video.view_count)} views · {formatNumber(video.like_count)} likes ·{" "}
           {formatNumber(video.comment_count)} comments
+          {engagementRate(video) !== null && ` · ${(engagementRate(video) * 100).toFixed(1)}% eng.`}
         </p>
 
         <div className="flex items-center justify-between gap-2">
