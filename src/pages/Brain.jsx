@@ -24,7 +24,7 @@ export default function Brain() {
   return (
     <div className="space-y-8">
       <PageHeader
-        eyebrow="Content College AI"
+        eyebrow="Brain"
         title="Train your brain"
         description="Upload the files that make you, you. The brain reads each one and remembers what matters."
       />

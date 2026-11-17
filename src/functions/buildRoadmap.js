@@ -9,7 +9,7 @@ export default async function (req) {
 
     const brain = await loadCreatorBrain(base44, user.id);
     if (!brain) {
-      return Response.json({ error: 'Train your Content College AI Brain first' }, { status: 400 });
+      return Response.json({ error: 'Train your Brain first' }, { status: 400 });
     }
 
     const prompt = `You are a business strategist for creators. Build a practical, step-by-step roadmap for this ONE creator to earn their first $1,000 online, in their specific niche, using their existing offer, audience, story and content pillars from the Creator OS Brain below.

@@ -52,7 +52,7 @@ export default async function (req) {
 
     const brain = await loadCreatorBrain(base44, user.id);
     if (!brain) {
-      return Response.json({ error: 'Train your Content College AI Brain first' }, { status: 400 });
+      return Response.json({ error: 'Train your Brain first' }, { status: 400 });
     }
 
     const whyItWorked = Array.isArray(outlier.why_it_worked) ? outlier.why_it_worked.join('; ') : '';

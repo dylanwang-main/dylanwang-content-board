@@ -21,7 +21,7 @@ export default async function (req) {
 
     const brain = await loadCreatorBrain(base44, user.id);
     if (!brain) {
-      return Response.json({ error: 'Train your Content College AI Brain first' }, { status: 400 });
+      return Response.json({ error: 'Train your Brain first' }, { status: 400 });
     }
 
     const prompt = `You are the Creator OS content engine. You create complete, ready-to-film content for ONE specific creator, using only their Creator OS Brain below.

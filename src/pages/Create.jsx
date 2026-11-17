@@ -23,7 +23,7 @@ export default function Create() {
       <PageHeader
         eyebrow="Create Content"
         title="One click. A full video."
-        description="Pick a platform and format. Your Content College AI Brain chooses the topic, shapes the idea and writes the complete video."
+        description="Pick a platform and format. Your Brain chooses the topic, shapes the idea and writes the complete video."
       />
 
       <div className="flex gap-2">
