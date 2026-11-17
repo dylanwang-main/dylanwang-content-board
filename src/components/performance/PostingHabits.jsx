@@ -42,6 +42,7 @@ export default function PostingHabits() {
   const yt = useYouTubeVideos();
   const [goal, setGoal] = useState(loadGoal);
   const [platform, setPlatform] = useState("all");
+  const [hover, setHover] = useState(null);
 
   useEffect(() => {
     try {
@@ -126,18 +127,43 @@ export default function PostingHabits() {
 
       <div className="grid gap-6 lg:grid-cols-[auto_1fr]">
         <Panel title="Last 6 months">
-          <div className="flex gap-[3px] overflow-x-auto">
-            {grid.map((week, i) => (
-              <div key={i} className="flex flex-col gap-[3px]">
-                {week.map((day) => (
-                  <div
-                    key={day.at}
-                    title={day.future ? "" : `${format(day.at, "EEE MMM d")}: ${day.count} post${day.count === 1 ? "" : "s"}`}
-                    className={`h-3 w-3 rounded-[2px] ${day.future ? "bg-transparent" : shade(day.count)}`}
-                  />
-                ))}
+          <div className="relative" onMouseLeave={() => setHover(null)}>
+            <div className="flex gap-[3px] overflow-x-auto">
+              {grid.map((week, i) => (
+                <div key={i} className="flex flex-col gap-[3px]">
+                  {week.map((day) => (
+                    <div
+                      key={day.at}
+                      onMouseEnter={(e) =>
+                        !day.future &&
+                        setHover({ day, x: e.currentTarget.offsetLeft + 6, y: e.currentTarget.offsetTop })
+                      }
+                      className={`h-3 w-3 rounded-[2px] ${day.future ? "bg-transparent" : shade(day.count)} ${
+                        hover?.day.at === day.at ? "ring-1 ring-foreground" : ""
+                      }`}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+            {hover && (
+              <div
+                className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md border border-border bg-popover px-2.5 py-1.5 text-xs shadow-lg"
+                style={{ left: hover.x, top: hover.y - 6 }}
+              >
+                <p className="font-medium">
+                  {hover.day.count} post{hover.day.count === 1 ? "" : "s"}
+                  <span className="font-normal text-muted-foreground"> · {format(hover.day.at, "EEE, MMM d")}</span>
+                </p>
+                {hover.day.count > 0 && platform === "all" && (
+                  <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+                    {PLATFORMS.filter((p) => hover.day.byPlatform[p.key])
+                      .map((p) => `${p.label} ${hover.day.byPlatform[p.key]}`)
+                      .join(" · ")}
+                  </p>
+                )}
               </div>
-            ))}
+            )}
           </div>
           <div className="mt-3 flex items-center gap-1.5 text-[10px] text-muted-foreground">
             Less
