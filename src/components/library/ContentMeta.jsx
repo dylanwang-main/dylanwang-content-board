@@ -13,7 +13,7 @@ export default function ContentMeta({ values, onChange, platforms, pillars }) {
   const pillarOptions = withValue(pillars, values.pillar);
 
   return (
-    <div className="space-y-5 rounded-2xl border border-border/60 bg-card/70 p-4 sm:p-6">
+    <div className="space-y-5 rounded-lg border border-border/60 bg-card/70 p-4 sm:p-6">
       <FieldSelect
         label="Status"
         value={values.status}

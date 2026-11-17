@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 
 export function useGenerateContent() {
   const queryClient = useQueryClient();
@@ -7,7 +7,7 @@ export function useGenerateContent() {
   return useMutation({
     mutationFn: async (input) => {
       try {
-        const response = await base44.functions.invoke("generateContent", input);
+        const response = await api.functions.invoke("generateContent", input);
         return response.data;
       } catch (error) {
         throw new Error(error?.response?.data?.error || "Generation failed. Please try again.");

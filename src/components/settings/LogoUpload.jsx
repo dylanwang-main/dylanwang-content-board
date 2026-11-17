@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { ImageUp, Loader2, X } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 import { Button } from "@/components/ui/button";
 import { Image } from "@/components/ui/image";
 
@@ -16,7 +16,7 @@ export default function LogoUpload({ value, onChange }) {
     setUploading(true);
 
     try {
-      const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
+      const { file_url } = await api.integrations.Core.UploadPublicFile({ file });
       onChange(file_url);
     } finally {
       setUploading(false);
@@ -25,7 +25,7 @@ export default function LogoUpload({ value, onChange }) {
 
   return (
     <div className="flex flex-wrap items-center gap-4">
-      <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border border-border/70 bg-secondary/40">
+      <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-lg border border-border/70 bg-secondary/40">
         {value ? (
           <Image src={value} alt="Your logo" className="h-full w-full" fittingType="fit" />
         ) : (

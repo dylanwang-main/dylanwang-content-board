@@ -63,7 +63,7 @@ export default function MobileNav() {
                   setOpen(false);
                 }}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left text-sm",
+                  "flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-left text-sm",
                   location.pathname === to
                     ? "font-semibold text-primary"
                     : "font-medium text-foreground/80"

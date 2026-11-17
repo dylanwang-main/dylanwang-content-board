@@ -11,7 +11,7 @@ export default function AnglesReport({ record }) {
         {angles.map((angle, index) => (
           <div
             key={`${angle.title}-${index}`}
-            className="flex gap-4 rounded-xl bg-background/40 p-4"
+            className="flex gap-4 rounded-lg bg-background/40 p-4"
           >
             <p className="font-heading text-2xl leading-none text-primary">
               {angle.rank || index + 1}

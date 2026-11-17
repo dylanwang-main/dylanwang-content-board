@@ -2,33 +2,19 @@
 
 ## Project Context
 
-This is a Base44 app repository. Treat it as user-owned application code, keep changes focused on the user's request, and preserve existing project conventions.
-
-Start with `README.md` for local setup, environment variables, and publish workflow.
-
-## Base44 References
-
-- CLI overview: https://docs.base44.com/developers/references/cli/get-started/overview.md
-- Agent skills: https://docs.base44.com/developers/backend/overview/skills.md
-
-If your agent supports Agent Skills, install or update Base44 skills before Base44-specific work:
-
-```bash
-npx skills add base44/skills
-```
+Content Dashboard: React + Vite frontend on Vercel, Supabase (Postgres with RLS, auth, storage, one edge function) as the backend. It was migrated off Base44; there is no Base44 CLI or SDK anymore. Start with `README.md`.
 
 ## Key Files
 
-- `src/`: frontend application source.
-- `src/api/base44Client.js`: frontend Base44 SDK client.
-- `vite.config.js`: Vite config and Base44 Vite plugin setup.
-- `.env.local`: local-only environment values; never commit secrets.
+- `src/api/db.js`: Supabase client plus the Base44-compatible `api` shim (entities, auth, files, functions).
+- `src/functions/`: the former Base44 functions, run in the browser through `src/functions/runtime.js`.
+- `src/lib/analysis.js`, `src/lib/habits.js`, `src/lib/mediaFilters.js`: pure analysis logic, covered by tests.
+- `supabase/migrations/`: schema, numbered. Add a new file per change.
+- `supabase/functions/tiktok/`: TikTok OAuth exchange and API proxy.
+- `.env.local`: local-only values (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`); never commit secrets.
 
 ## Working Notes
 
-- Use `base44 dev` as the default local development command when you need the local Base44 backend. It can run the backend and frontend together.
-- When docs or code mention the frontend being started automatically, that usually means the Base44 project config includes `site.serveCommand`, for example `"serveCommand": "npm run dev"` in `base44/config.jsonc`.
-- Use `npm run dev` only for frontend-only work against the hosted Base44 backend.
-- Prefer the existing Base44 CLI workflow over adding new npm scripts for Base44-specific tasks.
-- Reuse the existing SDK client and Vite plugin patterns before adding new Base44 integration paths.
-- Run the relevant checks from `package.json` before finishing code changes.
+- `npm run dev` for local work, `npm test` and `npm run build` before finishing.
+- Keep secrets out of the browser: anything needing a client secret goes in an edge function.
+- Every table uses RLS keyed on `created_by_id = auth.uid()`.

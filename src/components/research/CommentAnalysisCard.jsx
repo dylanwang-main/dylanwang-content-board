@@ -37,7 +37,7 @@ export default function CommentAnalysisCard({ scan }) {
 
       {notable.length > 0 && (
         <div className="mt-6">
-          <h3 className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+          <h3 className="text-xs text-muted-foreground">
             Notable comments
           </h3>
           <ul className="mt-3 space-y-2">

@@ -10,13 +10,11 @@ export default function Roadmap() {
   const build = useBuildRoadmap();
 
   return (
-    <section className="rounded-3xl border border-border/60 bg-card p-6 shadow-xl shadow-black/5 sm:p-8">
-      <div className="flex flex-wrap items-start justify-between gap-4">
+    <section aria-label="First $1,000 roadmap" className="rounded-lg border border-border bg-card px-4 py-3.5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-heading text-xl font-semibold">First $1,000 roadmap</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Step by step to your first grand, in your niche
-          </p>
+          <h2 className="text-sm font-medium text-foreground">First $1,000 roadmap</h2>
+          <p className="mt-0.5 text-xs text-muted-foreground">A step-by-step plan from your Brain and numbers.</p>
           {build.isError && (
             <p className="mt-2 text-sm text-destructive">
               {build.error?.message || "Could not build your roadmap. Please try again."}
@@ -24,14 +22,14 @@ export default function Roadmap() {
           )}
         </div>
 
-        <Button onClick={() => build.mutate()} disabled={build.isPending}>
+        <Button size="sm" variant={roadmap ? "outline" : "default"} onClick={() => build.mutate()} disabled={build.isPending}>
           {build.isPending ? <Loader2 className="animate-spin" /> : <Sparkles />}
           {build.isPending ? "Building…" : roadmap ? "Rebuild roadmap" : "Build my roadmap"}
         </Button>
       </div>
 
       {roadmap && (
-        <div className="mt-6 border-t border-border/60 pt-6">
+        <div className="mt-4 border-t border-border pt-4">
           {roadmap.summary && <p className="text-sm text-muted-foreground">{roadmap.summary}</p>}
 
           {roadmap.steps?.length > 0 && (
@@ -43,7 +41,7 @@ export default function Roadmap() {
           )}
 
           {roadmap.revenue_math && (
-            <div className="mt-5 rounded-2xl bg-primary/5 p-4 text-sm">{roadmap.revenue_math}</div>
+            <div className="mt-5 rounded-lg bg-primary/5 p-4 text-sm">{roadmap.revenue_math}</div>
           )}
         </div>
       )}

@@ -3,13 +3,14 @@ import { useMe } from "@/hooks/useCreatorData";
 import { useToggleMilestone } from "@/hooks/useMilestones";
 import { computeMilestones } from "@/lib/milestones";
 
-export default function Milestones({ items = [], brainFiles = [], research = [], publishedThisMonth = 0, goal }) {
+export default function Milestones({ items = [], videos = [], brainFiles = [], research = [], publishedThisMonth = 0, goal }) {
   const { data: me } = useMe();
   const overrides = me?.milestone_overrides || {};
   const toggle = useToggleMilestone(overrides);
 
   const milestones = computeMilestones({
     items,
+    videos,
     brainFiles,
     research,
     publishedThisMonth,
@@ -24,15 +25,18 @@ export default function Milestones({ items = [], brainFiles = [], research = [],
   const next = milestones.find((milestone) => !milestone.done);
 
   return (
-    <section className="rounded-3xl border border-border/60 bg-card p-6 shadow-xl shadow-black/5 sm:p-8">
-      <div className="mb-5 flex items-baseline justify-between gap-3">
-        <h2 className="font-heading text-xl font-semibold">Milestones</h2>
-        <p className="text-xs text-muted-foreground">
-          {doneCount}/{milestones.length} done
+    <section aria-label="Milestones">
+      <div className="mb-3 flex items-baseline justify-between gap-3">
+        <h2 className="text-[13px] font-semibold text-muted-foreground">Milestones</h2>
+        <p className="font-mono text-[11px] text-muted-foreground">
+          {doneCount}/{milestones.length}
         </p>
       </div>
+      <div className="mb-3 h-px w-full bg-border" aria-hidden="true">
+        <div className="h-px bg-primary" style={{ width: `${(doneCount / milestones.length) * 100}%` }} />
+      </div>
 
-      <div className="grid gap-2.5 sm:grid-cols-2">
+      <div className="grid overflow-hidden rounded-lg border border-border bg-card sm:grid-cols-2 [&>button:last-child]:border-b-0 sm:[&>button:nth-last-child(2)]:border-b-0">
         {milestones.map((milestone) => (
           <MilestoneButton
             key={milestone.label}
@@ -43,13 +47,13 @@ export default function Milestones({ items = [], brainFiles = [], research = [],
         ))}
       </div>
 
-      <p className="mt-5 text-sm">
+      <p className="mt-3 text-[13px] text-muted-foreground">
         {next ? (
           <>
-            Next up: <span className="text-primary">{next.label}</span>.
+            Next up: <span className="text-foreground">{next.label}</span>
           </>
         ) : (
-          "Every milestone reached. Beautiful work."
+          "All eight done."
         )}
       </p>
     </section>

@@ -27,7 +27,7 @@ export default function ContentGenerator({ me, brand, learnedCount }) {
     <>
     <form
       onSubmit={onSubmit}
-      className="rounded-2xl border border-border/60 bg-card/70 p-6 sm:p-8"
+      className="rounded-lg border border-border/60 bg-card/70 p-6 sm:p-8"
     >
       <div className="grid gap-4 sm:grid-cols-3">
         <FieldSelect

@@ -5,7 +5,7 @@ export default function BulletList({ title, items }) {
 
   return (
     <div>
-      <h3 className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{title}</h3>
+      <h3 className="text-xs text-muted-foreground">{title}</h3>
       <ul className="mt-3 space-y-2">
         {list.map((item, index) => (
           <li key={`${item}-${index}`} className="flex gap-2.5 text-sm text-muted-foreground">

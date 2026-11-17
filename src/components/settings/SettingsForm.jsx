@@ -16,7 +16,6 @@ export default function SettingsForm({ me }) {
     monthly_goal: me?.monthly_goal ? String(me.monthly_goal) : "",
     platforms: me?.platforms || [],
     logo_url: me?.logo_url || "",
-    youtube_handle: me?.youtube_handle || "",
   });
 
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
@@ -32,7 +31,6 @@ export default function SettingsForm({ me }) {
       monthly_goal: goal === "" ? null : Number(goal),
       platforms: form.platforms,
       logo_url: form.logo_url,
-      youtube_handle: form.youtube_handle.trim().replace(/^@+/, ""),
     });
 
     setJustSaved(true);
@@ -45,7 +43,7 @@ export default function SettingsForm({ me }) {
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Display name" hint={`Defaults to ${accountName}`}>
             <Input
-              className="rounded-xl"
+              className="rounded-lg"
               value={form.display_name}
               onChange={(event) => set("display_name", event.target.value)}
             />
@@ -53,7 +51,7 @@ export default function SettingsForm({ me }) {
 
           <Field label="Monthly publishing goal" hint="Pieces per month, tracked on your dashboard.">
             <Input
-              className="rounded-xl"
+              className="rounded-lg"
               type="number"
               min={1}
               placeholder="e.g. 12"
@@ -72,21 +70,9 @@ export default function SettingsForm({ me }) {
       </SettingsCard>
 
       <SettingsCard
-        title="Your platforms"
-        description="The channels you publish to. These appear as options when creating content."
+        title="Posting platforms"
+        description="Where you post. These show up in the platform menu when you create or log content."
       >
-        <Field
-          label="YouTube channel handle"
-          hint="Used by the YouTube tab to sync your channel."
-        >
-          <Input
-            className="rounded-xl"
-            placeholder="@yourchannel"
-            value={form.youtube_handle}
-            onChange={(event) => set("youtube_handle", event.target.value)}
-          />
-        </Field>
-
         <PlatformPicker
           value={form.platforms}
           onChange={(value) => set("platforms", value)}
@@ -96,7 +82,7 @@ export default function SettingsForm({ me }) {
           <Button
             type="submit"
             disabled={save.isPending}
-            className="rounded-full shadow-lg shadow-primary/30"
+            className="rounded-full"
           >
             {save.isPending ? <Loader2 className="animate-spin" /> : justSaved ? <Check /> : null}
             {justSaved ? "Saved" : "Save changes"}

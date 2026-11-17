@@ -14,7 +14,7 @@ export default function RunHistoryRow({
 
   return (
     <div
-      className={`flex items-center gap-2 rounded-xl border p-3 ${
+      className={`flex items-center gap-2 rounded-lg border p-3 ${
         isSelected ? "border-primary/60 bg-primary/5" : "border-border/60"
       }`}
     >

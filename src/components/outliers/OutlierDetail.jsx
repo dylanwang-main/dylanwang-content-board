@@ -26,7 +26,7 @@ import { formatNumber } from "@/lib/content";
 function Block({ title, children }) {
   return (
     <div className="space-y-2">
-      <h3 className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+      <h3 className="text-[11px] font-medium text-muted-foreground">
         {title}
       </h3>
       {children}
@@ -62,15 +62,15 @@ export default function OutlierDetail({ outlier, onClose }) {
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[92vh] w-[calc(100vw-1.5rem)] max-w-3xl overflow-y-auto rounded-2xl">
+      <DialogContent className="max-h-[92vh] w-[calc(100vw-1.5rem)] max-w-3xl overflow-y-auto rounded-lg">
         <DialogHeader>
-          <DialogTitle className="text-[11px] font-medium uppercase tracking-[0.18em] text-primary">
+          <DialogTitle className="text-[11px] font-medium text-primary">
             Outlier
           </DialogTitle>
         </DialogHeader>
 
         <div className="flex gap-4">
-          <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-secondary">
+          <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-secondary">
             {outlier.thumbnail_url && (
               <img src={outlier.thumbnail_url} alt="" className="h-full w-full object-cover" />
             )}
@@ -114,8 +114,8 @@ export default function OutlierDetail({ outlier, onClose }) {
         {dissected && (
           <div className="space-y-5">
             {outlier.hook && (
-              <div className="rounded-xl bg-primary/10 p-4">
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-primary">
+              <div className="rounded-lg bg-primary/10 p-4">
+                <p className="text-[11px] font-medium text-primary">
                   Hook
                 </p>
                 <p className="mt-2 text-sm italic leading-relaxed">{outlier.hook}</p>
@@ -171,7 +171,7 @@ export default function OutlierDetail({ outlier, onClose }) {
 
             {outlier.full_transcript && (
               <Collapsible>
-                <CollapsibleTrigger className="flex w-full items-center justify-between rounded-xl border border-border/70 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-accent">
+                <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border border-border/70 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-accent">
                   Transcript
                   <ChevronDown className="h-4 w-4" />
                 </CollapsibleTrigger>

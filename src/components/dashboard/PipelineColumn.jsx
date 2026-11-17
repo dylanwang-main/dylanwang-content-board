@@ -6,25 +6,25 @@ export default function PipelineColumn({ status, label, items, onOpen }) {
   return (
     <Droppable droppableId={status}>
       {(provided, snapshot) => (
-        <div className="flex w-64 shrink-0 flex-col rounded-2xl border border-border/70 bg-card/40 p-3 lg:w-auto">
-          <div className="mb-3 flex items-center gap-2">
+        <div className="flex w-64 shrink-0 flex-col rounded-lg bg-card p-2.5 lg:w-auto">
+          <div className="mb-2 flex items-center gap-2 px-1">
             <span className={`h-2 w-2 rounded-full ${STATUS_BARS[status] || ""}`} />
-            <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            <span className="text-xs font-medium text-muted-foreground">
               {label}
             </span>
-            <span className="ml-auto font-heading text-sm font-light">{items.length}</span>
+            <span className="ml-auto font-mono text-[11px] text-muted-foreground">{items.length}</span>
           </div>
 
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`max-h-[420px] min-h-[140px] flex-1 overflow-y-auto rounded-xl p-0.5 transition-colors ${
+            className={`max-h-[420px] min-h-[96px] flex-1 overflow-y-auto rounded-lg p-0.5 transition-colors ${
               snapshot.isDraggingOver ? "bg-primary/5" : ""
             }`}
           >
             {items.length === 0 && !snapshot.isDraggingOver && (
-              <p className="flex h-[140px] items-center justify-center text-center text-xs text-muted-foreground/60">
-                Drop content here
+              <p className="flex h-[96px] items-center justify-center text-center text-xs text-muted-foreground/50">
+                Empty
               </p>
             )}
 

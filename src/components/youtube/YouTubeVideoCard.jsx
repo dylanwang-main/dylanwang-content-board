@@ -4,6 +4,7 @@ import { format, parseISO } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useAnalyzeYouTubeVideo } from "@/hooks/useYouTube";
 import { formatNumber } from "@/lib/content";
+import { engagementRate } from "@/lib/videoFilters";
 
 const STATUS_PILLS = {
   synced: "bg-muted text-muted-foreground",
@@ -49,7 +50,7 @@ export default function YouTubeVideoCard({ video }) {
   const whyItWorks = Array.isArray(video.why_it_works) ? video.why_it_works : [];
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-border/70 bg-card transition-colors hover:border-primary/40">
+    <article className="overflow-hidden rounded-lg border border-border/70 bg-card transition-colors hover:border-primary/40">
       <a href={video.url} target="_blank" rel="noreferrer" className="group block">
         <div className="relative aspect-video bg-secondary">
           {video.thumbnail_url && (
@@ -84,6 +85,7 @@ export default function YouTubeVideoCard({ video }) {
         <p className="text-xs text-muted-foreground">
           {formatNumber(video.view_count)} views · {formatNumber(video.like_count)} likes ·{" "}
           {formatNumber(video.comment_count)} comments
+          {engagementRate(video) !== null && ` · ${(engagementRate(video) * 100).toFixed(1)}% eng.`}
         </p>
 
         <div className="flex items-center justify-between gap-2">
@@ -129,10 +131,10 @@ export default function YouTubeVideoCard({ video }) {
         )}
 
         {status === "analyzed" && open && (
-          <div className="space-y-3 rounded-xl border border-border/70 bg-secondary/40 p-3">
+          <div className="space-y-3 rounded-lg border border-border/70 bg-secondary/40 p-3">
             {video.hook && (
               <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] text-muted-foreground">
                   Hook
                 </p>
                 <p className="mt-1 text-sm italic text-primary">{video.hook}</p>
@@ -141,7 +143,7 @@ export default function YouTubeVideoCard({ video }) {
 
             {video.summary && (
               <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] text-muted-foreground">
                   Summary
                 </p>
                 <p className="mt-1 text-sm leading-relaxed">{video.summary}</p>
@@ -150,7 +152,7 @@ export default function YouTubeVideoCard({ video }) {
 
             {whyItWorks.length > 0 && (
               <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] text-muted-foreground">
                   Why it works
                 </p>
                 <ul className="mt-1 list-disc space-y-1 pl-4 text-sm leading-relaxed">

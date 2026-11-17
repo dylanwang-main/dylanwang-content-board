@@ -27,7 +27,7 @@ export default function LibraryFilters({
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            className="rounded-xl pl-9"
+            className="rounded-lg pl-9"
             value={search}
             onChange={(event) => onSearch(event.target.value)}
             placeholder="Search titles and copy…"
@@ -35,7 +35,7 @@ export default function LibraryFilters({
         </div>
 
         <Select value={platform} onValueChange={onPlatform}>
-          <SelectTrigger className="rounded-xl sm:w-48">
+          <SelectTrigger className="rounded-lg sm:w-48">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -58,7 +58,7 @@ export default function LibraryFilters({
               onClick={() => onStatus(tab.value)}
               className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm transition-colors ${
                 status === tab.value
-                  ? "bg-gold-gradient text-primary-foreground"
+                  ? "bg-primary text-primary-foreground"
                   : "bg-secondary text-muted-foreground hover:text-foreground"
               }`}
             >

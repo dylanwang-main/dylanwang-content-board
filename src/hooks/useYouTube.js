@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 
 export function useYouTubeVideos() {
   return useQuery({
     queryKey: ["youtube"],
     queryFn: async () => {
-      const page = await base44.entities.YouTubeVideo.list({
+      const page = await api.entities.YouTubeVideo.list({
         sort: "-published_at",
         limit: 500,
       });
@@ -22,7 +22,7 @@ export function useSyncYouTube() {
   return useMutation({
     mutationFn: async ({ handle }) => {
       try {
-        const response = await base44.functions.invoke("syncYouTube", { handle });
+        const response = await api.functions.invoke("syncYouTube", { handle });
         return response.data;
       } catch (error) {
         throw new Error(
@@ -42,10 +42,10 @@ export function useAnalyzeYouTubeVideo() {
 
   return useMutation({
     mutationFn: async (recordId) => {
-      await base44.entities.YouTubeVideo.update(recordId, { status: "analyzing" });
+      await api.entities.YouTubeVideo.update(recordId, { status: "analyzing" });
       queryClient.invalidateQueries({ queryKey: ["youtube"] });
 
-      base44.functions
+      api.functions
         .invoke("analyzeYouTubeVideo", { video_record_id: recordId })
         .catch(() => {})
         .finally(() => queryClient.invalidateQueries({ queryKey: ["youtube"] }));

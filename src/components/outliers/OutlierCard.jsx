@@ -50,7 +50,7 @@ export default function OutlierCard({ outlier, onOpen }) {
   return (
     <article
       onClick={onOpen}
-      className="group cursor-pointer overflow-hidden rounded-2xl border border-border/70 bg-card transition-colors hover:border-primary/40"
+      className="group cursor-pointer overflow-hidden rounded-lg border border-border/70 bg-card transition-colors hover:border-primary/40"
     >
       <div className="relative aspect-square">
         {outlier.thumbnail_url ? (

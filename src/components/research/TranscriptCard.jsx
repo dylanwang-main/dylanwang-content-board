@@ -7,7 +7,7 @@ export default function TranscriptCard({ scan }) {
     <Panel title="Transcript">
       {scan.hook && (
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Hook</p>
+          <p className="text-xs text-muted-foreground">Hook</p>
           <p className="mt-1 text-sm text-primary">{scan.hook}</p>
         </div>
       )}
@@ -18,13 +18,13 @@ export default function TranscriptCard({ scan }) {
         </p>
       )}
 
-      <div className="mt-4 max-h-96 overflow-y-auto whitespace-pre-wrap break-words rounded-xl bg-background/40 p-4 text-sm leading-relaxed text-muted-foreground">
+      <div className="mt-4 max-h-96 overflow-y-auto whitespace-pre-wrap break-words rounded-lg bg-background/40 p-4 text-sm leading-relaxed text-muted-foreground">
         {scan.transcript || "No transcript found."}
       </div>
 
       {reasons.length > 0 && (
         <div className="mt-5">
-          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Why it works</p>
+          <p className="text-xs text-muted-foreground">Why it works</p>
           <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-muted-foreground">
             {reasons.map((reason, index) => (
               <li key={`${reason}-${index}`}>{reason}</li>

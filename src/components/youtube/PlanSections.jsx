@@ -4,7 +4,7 @@ import { formatNumber } from "@/lib/content";
 
 function Label({ children }) {
   return (
-    <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+    <p className="text-[10px] font-medium text-muted-foreground">
       {children}
     </p>
   );
@@ -34,7 +34,7 @@ export default function PlanSections({ plan }) {
   return (
     <div className="space-y-6">
       <Panel>
-        <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-primary">Topic</p>
+        <p className="text-[11px] font-medium text-primary">Topic</p>
         <h3 className="mt-2 font-heading text-3xl font-light tracking-tight">
           {titles[0] || plan.working_title || plan.topic}
         </h3>
@@ -54,7 +54,7 @@ export default function PlanSections({ plan }) {
             {titles.map((title, index) => (
               <li
                 key={index}
-                className="flex items-start gap-3 rounded-xl border border-border/60 px-3 py-2.5"
+                className="flex items-start gap-3 rounded-lg border border-border/60 px-3 py-2.5"
               >
                 <span className="mt-0.5 font-heading text-sm text-muted-foreground">{index + 1}</span>
                 <span className="flex-1 text-sm leading-relaxed">{title}</span>
@@ -97,7 +97,7 @@ export default function PlanSections({ plan }) {
         <Panel title="Script plan">
           <div className="space-y-3">
             {steps.map((step, index) => (
-              <div key={index} className="rounded-xl border border-border/60 p-4">
+              <div key={index} className="rounded-lg border border-border/60 p-4">
                 <p className="text-sm font-medium">{step.step}</p>
                 <Bullets items={step.points} />
               </div>
@@ -124,7 +124,7 @@ export default function PlanSections({ plan }) {
         <Panel title="Thumbnail ideas">
           <div className="grid gap-3 sm:grid-cols-3">
             {thumbnails.map((thumb, index) => (
-              <div key={index} className="rounded-xl border border-border/60 p-4">
+              <div key={index} className="rounded-lg border border-border/60 p-4">
                 <p className="text-sm leading-relaxed">{thumb.concept}</p>
                 {thumb.text_overlay && (
                   <span className="mt-3 inline-flex rounded-full bg-primary/15 px-2.5 py-1 text-xs font-semibold text-primary">
@@ -145,7 +145,7 @@ export default function PlanSections({ plan }) {
       <Panel title="Competitors">
         {competitors.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No competitor data. Add your YOUTUBE_API_KEY secret to include competitor research.
+            No competitor data. Connect YouTube in Settings to include competitor research.
           </p>
         ) : (
           <div className="space-y-4">

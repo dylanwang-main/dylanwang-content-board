@@ -11,11 +11,11 @@ export default function InstagramStats({ instagram }) {
     <Panel title="Instagram">
       <div className="grid grid-cols-3 gap-4">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Posts</p>
+          <p className="text-[11px] text-muted-foreground">Posts</p>
           <p className="mt-1 font-heading text-2xl font-light">{instagram.posts}</p>
         </div>
         <div>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="text-[11px] text-muted-foreground">
             Avg likes
           </p>
           <p className="mt-1 font-heading text-2xl font-light">
@@ -23,7 +23,7 @@ export default function InstagramStats({ instagram }) {
           </p>
         </div>
         <div>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="text-[11px] text-muted-foreground">
             Avg comments
           </p>
           <p className="mt-1 font-heading text-2xl font-light">

@@ -7,7 +7,7 @@ export default function RunHistory({ runs, selectedId, onSelect }) {
 
   return (
     <div>
-      <h3 className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Research runs</h3>
+      <h3 className="text-xs text-muted-foreground">Research runs</h3>
 
       <div className="mt-3 space-y-2">
         {runs.map((run) => (

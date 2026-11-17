@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 
 export function useOutliers() {
   return useQuery({
     queryKey: ["outliers"],
     queryFn: async () => {
-      const page = await base44.entities.Outlier.list({
+      const page = await api.entities.Outlier.list({
         sort: "-engagement_score",
         limit: 200,
       });
@@ -22,7 +22,7 @@ export function useDetectOutliers() {
   return useMutation({
     mutationFn: async () => {
       try {
-        const response = await base44.functions.invoke("detectOutliers", {});
+        const response = await api.functions.invoke("detectOutliers", {});
         return response.data;
       } catch (error) {
         throw new Error(
@@ -41,10 +41,10 @@ export function useDissectOutlier() {
 
   return useMutation({
     mutationFn: async (id) => {
-      await base44.entities.Outlier.update(id, { status: "dissecting" });
+      await api.entities.Outlier.update(id, { status: "dissecting" });
       await queryClient.invalidateQueries({ queryKey: ["outliers"] });
 
-      base44.functions
+      api.functions
         .invoke("dissectOutlier", { outlier_id: id })
         .catch(() => {})
         .finally(() => queryClient.invalidateQueries({ queryKey: ["outliers"] }));
@@ -60,7 +60,7 @@ export function useGenerateVariations() {
   return useMutation({
     mutationFn: async (outlierId) => {
       try {
-        const response = await base44.functions.invoke("generateVariations", {
+        const response = await api.functions.invoke("generateVariations", {
           outlier_id: outlierId,
         });
         return response.data;
@@ -83,7 +83,7 @@ export function useDeleteOutlier() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id) => base44.entities.Outlier.delete(id),
+    mutationFn: (id) => api.entities.Outlier.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["outliers"] }),
   });
 }

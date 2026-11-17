@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, ExternalLink, FileText, Loader2, RotateCw, Trash2 } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 import { Button } from "@/components/ui/button";
 import { useDeleteBrainFile, useRelearnBrainFile } from "@/hooks/useBrain";
 
@@ -20,14 +20,14 @@ export default function BrainFileRow({ file }) {
   const points = file.key_points || [];
 
   const openFile = async () => {
-    const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({
+    const { signed_url } = await api.integrations.Core.CreateFileSignedUrl({
       file_uri: file.file_uri,
     });
     window.open(signed_url, "_blank", "noopener,noreferrer");
   };
 
   return (
-    <div className="rounded-xl border border-border/60 p-3.5">
+    <div className="rounded-lg border border-border/60 p-3.5">
       <div className="flex items-start gap-3">
         <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
 
@@ -57,9 +57,12 @@ export default function BrainFileRow({ file }) {
             </Button>
           )}
 
-          <Button variant="ghost" size="icon" title="Open file" onClick={openFile}>
-            <ExternalLink />
-          </Button>
+          {/* Demo-workspace files are sample summaries with no stored file. */}
+          {!file.file_uri?.startsWith("demo/") && (
+            <Button variant="ghost" size="icon" title="Open file" onClick={openFile}>
+              <ExternalLink />
+            </Button>
+          )}
 
           <Button
             variant="ghost"

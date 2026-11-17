@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Camera, RefreshCw, TrendingUp } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,9 @@ import PageHeader from "@/components/kit/PageHeader";
 import PageLoader from "@/components/kit/PageLoader";
 import StatCard from "@/components/kit/StatCard";
 import MediaCard from "@/components/instagram/MediaCard";
+import MediaFilters from "@/components/instagram/MediaFilters";
+import { filterAndSortMedia } from "@/lib/mediaFilters";
+import { fromInstagram, scorePosts } from "@/lib/analysis";
 import DateRangeFilter from "@/components/shared/DateRangeFilter";
 import { Button } from "@/components/ui/button";
 import { useInstagramMedia, useSyncInstagram } from "@/hooks/useInstagram";
@@ -14,6 +17,19 @@ import { useDetectOutliers } from "@/hooks/useOutliers";
 import { useSocialAccounts } from "@/hooks/useSocialAccounts";
 import { formatNumber } from "@/lib/content";
 import { inDateRange } from "@/lib/dateRange";
+
+const FILTERS_KEY = "cc.instagramFilters";
+const DEFAULT_FILTERS = { query: "", type: "all", sort: "newest", hideTrials: true };
+
+// Type and sort are remembered between visits; search starts empty.
+function loadFilters() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(FILTERS_KEY) || "{}");
+    return { ...DEFAULT_FILTERS, type: saved.type || "all", sort: saved.sort || "newest", hideTrials: saved.hideTrials !== false };
+  } catch {
+    return DEFAULT_FILTERS;
+  }
+}
 
 function syncedLabel(value) {
   if (!value) return null;
@@ -36,7 +52,25 @@ export default function Instagram() {
   const account = accounts.find((row) => (row.platform || "").toLowerCase() === "instagram");
 
   const [dateRange, setDateRange] = useState("all");
-  const filtered = media.filter((item) => inDateRange(item.timestamp, dateRange));
+  const [filters, setFilters] = useState(loadFilters);
+  useEffect(() => {
+    try {
+      localStorage.setItem(FILTERS_KEY, JSON.stringify({ type: filters.type, sort: filters.sort, hideTrials: filters.hideTrials }));
+    } catch {
+      // Storage unavailable: filters just won't be remembered.
+    }
+  }, [filters.type, filters.sort, filters.hideTrials]);
+
+  // Score every post against its own pool (reels vs posts, trials vs live).
+  const scores = useMemo(() => {
+    const map = new Map();
+    scorePosts(media.map(fromInstagram)).forEach((p) => map.set(p.id, p));
+    return map;
+  }, [media]);
+
+  const inRange = media.filter((item) => inDateRange(item.timestamp, dateRange));
+  const filtered = filterAndSortMedia(inRange, filters);
+  const views = filtered.reduce((sum, item) => sum + (item.view_count || 0), 0);
 
   const likes = filtered.reduce((sum, item) => sum + (item.like_count || 0), 0);
   const comments = filtered.reduce((sum, item) => sum + (item.comments_count || 0), 0);
@@ -76,9 +110,10 @@ export default function Instagram() {
         <PageLoader />
       ) : (
         <>
-          <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <section className="grid grid-cols-2 gap-4 lg:grid-cols-5">
             <StatCard label="Followers" value={formatNumber(account?.follower_count)} />
             <StatCard label="Posts" value={filtered.length} />
+            <StatCard label="Views" value={views ? formatNumber(views) : "—"} />
             <StatCard label="Likes" value={formatNumber(likes)} />
             <StatCard label="Comments" value={formatNumber(comments)} />
           </section>
@@ -86,6 +121,10 @@ export default function Instagram() {
           <p className="text-xs text-muted-foreground">
             {lastSynced ? `Last synced ${lastSynced}` : "Not synced yet"}
           </p>
+
+          {media.length > 0 && (
+            <MediaFilters value={filters} onChange={setFilters} shown={filtered.length} total={inRange.length} />
+          )}
 
           {media.length === 0 ? (
             <EmptyState
@@ -96,13 +135,13 @@ export default function Instagram() {
           ) : filtered.length === 0 ? (
             <EmptyState
               icon={Camera}
-              title="No posts in this range"
-              text="Pick a longer range or All content."
+              title="Nothing matches"
+              text="Try a longer date range or clear the filters."
             />
           ) : (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
               {filtered.map((item) => (
-                <MediaCard key={item.id} item={item} />
+                <MediaCard key={item.id} item={item} score={scores.get(item.id)} />
               ))}
             </div>
           )}

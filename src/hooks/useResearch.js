@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 
 const KEY = ["research"];
 
@@ -7,7 +7,7 @@ export function useResearchList() {
   return useQuery({
     queryKey: KEY,
     queryFn: async () => {
-      const page = await base44.entities.Research.list({ sort: "-created_date", limit: 50 });
+      const page = await api.entities.Research.list({ sort: "-created_date", limit: 50 });
       return page.items;
     },
     refetchInterval: (query) =>
@@ -20,9 +20,9 @@ export function useRunResearch() {
 
   return useMutation({
     mutationFn: async (input) => {
-      const record = await base44.entities.Research.create({ ...input, status: "researching" });
+      const record = await api.entities.Research.create({ ...input, status: "researching" });
 
-      base44.functions
+      api.functions
         .invoke("runResearch", { research_id: record.id })
         .catch(() => {})
         .finally(() => queryClient.invalidateQueries({ queryKey: KEY }));
@@ -37,7 +37,7 @@ export function useDeleteResearch() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id) => base44.entities.Research.delete(id),
+    mutationFn: (id) => api.entities.Research.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: KEY }),
   });
 }

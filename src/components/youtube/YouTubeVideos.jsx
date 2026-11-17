@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { Loader2, RefreshCw, Youtube } from "lucide-react";
@@ -7,12 +7,27 @@ import PageLoader from "@/components/kit/PageLoader";
 import StatCard from "@/components/kit/StatCard";
 import DateRangeFilter from "@/components/shared/DateRangeFilter";
 import YouTubeVideoCard from "@/components/youtube/YouTubeVideoCard";
+import VideoFilters from "@/components/youtube/VideoFilters";
+import { filterAndSortVideos } from "@/lib/videoFilters";
 import { Button } from "@/components/ui/button";
 import { useMe } from "@/hooks/useCreatorData";
 import { useSocialAccounts } from "@/hooks/useSocialAccounts";
 import { useSyncYouTube, useYouTubeStats, useYouTubeVideos } from "@/hooks/useYouTube";
 import { formatNumber } from "@/lib/content";
 import { inDateRange } from "@/lib/dateRange";
+
+const FILTERS_KEY = "cc.youtubeFilters";
+const DEFAULT_FILTERS = { query: "", format: "all", sort: "newest" };
+
+// Format and sort are remembered between visits; search starts empty.
+function loadFilters() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(FILTERS_KEY) || "{}");
+    return { ...DEFAULT_FILTERS, format: saved.format || "all", sort: saved.sort || "newest" };
+  } catch {
+    return DEFAULT_FILTERS;
+  }
+}
 
 function syncedLabel(value) {
   if (!value) return null;
@@ -26,8 +41,18 @@ export default function YouTubeVideos() {
   const { data: me } = useMe();
   const sync = useSyncYouTube();
   const [dateRange, setDateRange] = useState("all");
+  const [filters, setFilters] = useState(loadFilters);
 
-  const filtered = videos.filter((video) => inDateRange(video.published_at, dateRange));
+  useEffect(() => {
+    try {
+      localStorage.setItem(FILTERS_KEY, JSON.stringify({ format: filters.format, sort: filters.sort }));
+    } catch {
+      // Storage unavailable: filters just won't be remembered.
+    }
+  }, [filters.format, filters.sort]);
+
+  const inRange = videos.filter((video) => inDateRange(video.published_at, dateRange));
+  const filtered = filterAndSortVideos(inRange, filters);
   const stats = useYouTubeStats(filtered);
   const account = accounts.find((row) => (row.platform || "").toLowerCase() === "youtube");
   const handle = (me?.youtube_handle || "").trim().replace(/^@+/, "");
@@ -36,6 +61,10 @@ export default function YouTubeVideos() {
   return (
     <div className="space-y-6">
       <DateRangeFilter value={dateRange} onChange={setDateRange} />
+
+      {videos.length > 0 && (
+        <VideoFilters value={filters} onChange={setFilters} shown={filtered.length} total={inRange.length} />
+      )}
 
       <section className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         <StatCard label="Videos" value={formatNumber(stats.videos)} />
@@ -87,8 +116,8 @@ export default function YouTubeVideos() {
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={Youtube}
-          title="No videos in this range"
-          text="Pick a longer range or All content."
+          title="No videos match"
+          text="Try a longer date range, a different format, or clear your search."
         />
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

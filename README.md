@@ -1,62 +1,59 @@
-# Base44 Project
+# Content Dashboard
 
-Use this repository to run and edit the app locally, then publish changes back through Base44.
+A personal analytics dashboard for a short-form creator. It pulls posts and stats from Instagram, TikTok and YouTube, scores every post against the creator's own median, and tracks posting consistency.
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+**Live:** https://dylanwang-content-board.vercel.app (click "Explore the demo" for a sandbox with sample data, no signup)
 
-## Prerequisites
+## Why it exists
 
-1. Clone the repository using the project's Git URL.
-2. Navigate to the project directory.
-3. Install dependencies: `npm install`.
-4. Install the Base44 CLI: `npm install -g base44@latest`.
-5. Install [Deno](https://docs.deno.com/runtime/getting_started/installation/) — the local Base44 backend runs on it.
+Instagram's Edits app, TikTok Studio and YouTube Studio already show raw numbers. What they don't answer:
 
-Run `base44 --help` (or see the [CLI reference](https://docs.base44.com/developers/references/cli/commands/introduction)) for the full command surface.
+- Was this post actually good **for me**, or did one viral video skew everything?
+- What do my winners have in common?
+- Am I posting consistently, or does it just feel like it?
 
-## Run Locally
+This dashboard answers those three questions across all three platforms in one place.
 
-Three commands, from the project root:
+## Features
 
-```bash
-base44 login   # one-time per machine
-base44 link    # one-time per clone
-base44 dev     # local backend + frontend together
-```
+- **Channel sync**: Instagram (Graph API), TikTok (Display API via OAuth), YouTube (Data API). Views, likes, comments, shares, saves, watch time.
+- **Median-multiple scoring**: every post is compared to the median of the last 30 posts of the same kind (reels vs reels, Shorts vs Shorts) and tagged Outlier (3x+), Above (1.5x+), Normal or Flop (<0.5x).
+- **Analysis**: hit rate, momentum (last 10 vs previous 10), a rolling-median trend line, and plain-English findings on what separates winners from the rest (day, time, length, caption, format, shares per 1K views). Findings only show when each group has 3+ posts and the gap is real.
+- **Trial reel handling**: Instagram trial reels and grid-hidden reels are detected (`is_shared_to_feed = false`), hidden by default, and scored only against each other so they don't distort the real median.
+- **Posting habits**: GitHub-style 6-month calendar, weekly goal, streak, average per week, longest gap.
+- **AI breakdowns**: hook, summary and "why it works" for a post, using Claude. Runs in demo mode with no key, or with the visitor's own Anthropic key (stored in their browser only).
+- **Guest demo**: an anonymous Supabase session seeded with a fictional creator's data, wiped after 24 hours by a cron job.
 
-Open the frontend URL that `base44 dev` prints (typically `http://localhost:5173`).
+## Stack
 
-Notes:
+| Layer | Choice |
+| --- | --- |
+| Frontend | React, Vite, Tailwind, shadcn/ui, TanStack Query, Recharts |
+| Data + auth | Supabase Postgres with row-level security, anonymous sign-ins, Storage |
+| Server code | One Supabase Edge Function (`tiktok`) for the OAuth exchange and API proxy |
+| Jobs | pg_cron (guest cleanup) |
+| Hosting | Vercel |
+| Tests | Node's built-in test runner (`npm test`) |
 
-- **Every fresh clone needs `base44 link`.** It writes `base44/.app.jsonc` (the app-id pointer), which is deliberately gitignored. Your app id is in the Builder URL (`app.base44.com/apps/<id>/...`); `base44 link --help` shows the non-interactive flags.
-- **`base44 dev` runs the frontend for you** (via `site.serveCommand` in this repo's `base44/config.jsonc`) — never run `npm run dev` yourself: alone it serves a UI with no backend behind it (`[base44] Proxy not enabled`, every `/api` call fails), and alongside `base44 dev` the second Vite silently takes the next port and you end up looking at the wrong one.
-- **The app must be published at least once for the UI to load under `base44 dev`.** The frontend boots by fetching app settings from the hosted app; before the first publish that fails and every page redirects to login. The local API works regardless.
-- Entities, functions, and auth run locally — entity data is **in-memory only**, wiped when `base44 dev` restarts. Everything else (Core integrations, OAuth login) is forwarded to your deployed app. Full breakdown: [Local development overview](https://docs.base44.com/developers/backend/overview/local-dev/local-development-overview).
+## Architecture notes
 
-## Frontend Only, Hosted Backend
+- **Thin backend on purpose.** Most logic runs in the browser against Supabase, with RLS (`created_by_id = auth.uid()`) as the security boundary. The only server code is where a secret is unavoidable: TikTok's client secret and token refresh live in the `tiktok` Edge Function, and its tokens sit in a table no browser role can read.
+- **Two Instagram token types.** Meta's dashboard hands out either Instagram Login tokens (`IGAA…`, graph.instagram.com) or Facebook-style system user tokens (`EAA…`, graph.facebook.com with the IG account ID). `src/lib/instagram.js` detects which one and routes accordingly.
+- **Pure analysis code.** Scoring, findings and habits (`src/lib/analysis.js`, `src/lib/habits.js`, `src/lib/mediaFilters.js`) are plain functions over one normalized post shape, which keeps them easy to test.
+- **Migrated off Base44.** The app started as a Base44 project built from a course template. It was moved to Supabase + Vercel to drop the subscription and own the stack. The original Base44 functions run unchanged in the browser through a small compatibility layer (`src/api/db.js`, `src/functions/runtime.js`).
 
-To work on just the frontend against your app's live hosted backend:
-
-```bash
-base44 dev --remote
-```
-
-⚠️ In this mode writes go to your app's **production data** — plain `base44 dev` keeps everything local.
-
-## Publish Your Changes
-
-After pushing your changes to git, open the Base44 dashboard and publish the app:
+## Run locally
 
 ```bash
-base44 dashboard open
+npm install
+cp .env.example .env.local   # add your Supabase URL and anon key
+npm run dev
+npm test
 ```
 
-This repo syncs to Base44 through git, so publish from the dashboard rather than `base44 deploy` — a CLI deploy ships your local tree directly, bypassing the sync, and the deployed state silently diverges from the repo.
+Database schema lives in `supabase/migrations/`. The TikTok function lives in `supabase/functions/tiktok/` and needs `TIKTOK_CLIENT_KEY` and `TIKTOK_CLIENT_SECRET` set as Supabase secrets.
 
-## Docs & Support
+## Limits
 
-GitHub integration: [https://docs.base44.com/developers/app-code/local-development/github](https://docs.base44.com/developers/app-code/local-development/github)
-
-Local development: [https://docs.base44.com/developers/backend/overview/local-dev/local-development-overview](https://docs.base44.com/developers/backend/overview/local-dev/local-development-overview)
-
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+- Instagram and TikTok apps run in development/sandbox mode, so only the owner's accounts can connect. Visitors use the demo workspace.
+- Findings are correlations from a small sample, meant as things to test, not rules.

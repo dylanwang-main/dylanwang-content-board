@@ -1,18 +1,20 @@
 import { useState } from "react";
 import {
-  Check,
+  Eye,
   Heart,
+  Send,
   ImageOff,
+  Bookmark,
   Loader2,
   MessageCircle,
-  Trash2,
-  X,
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import MediaDetailDialog from "@/components/instagram/MediaDetailDialog";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/content";
-import { useAnalyzeInstagramMedia, useDeleteInstagramMedia } from "@/hooks/useInstagram";
+import { useAnalyzeInstagramMedia } from "@/hooks/useInstagram";
+import { isReel } from "@/lib/mediaFilters";
+import { MultipleBadge } from "@/pages/Analysis";
 
 const STATUS_PILLS = {
   synced: "bg-muted text-muted-foreground",
@@ -28,11 +30,9 @@ const STATUS_LABELS = {
   failed: "Failed",
 };
 
-export default function MediaCard({ item }) {
+export default function MediaCard({ item, score }) {
   const analyze = useAnalyzeInstagramMedia();
-  const remove = useDeleteInstagramMedia();
   const [open, setOpen] = useState(false);
-  const [confirming, setConfirming] = useState(false);
 
   const date = item.timestamp ? parseISO(item.timestamp) : null;
   const dateLabel = date && !Number.isNaN(date.getTime()) ? format(date, "MMM d") : null;
@@ -42,7 +42,7 @@ export default function MediaCard({ item }) {
     <>
       <article
         onClick={() => setOpen(true)}
-        className="group relative cursor-pointer overflow-hidden rounded-2xl border border-border/70 bg-card transition-colors hover:border-primary/40"
+        className="group relative cursor-pointer overflow-hidden rounded-lg border border-border/70 bg-card transition-colors hover:border-primary/40"
       >
         <div className="relative aspect-square">
           {item.thumbnail_url ? (
@@ -58,59 +58,23 @@ export default function MediaCard({ item }) {
             </div>
           )}
 
-          <div
-            className="absolute right-2 top-2 z-10 flex items-center gap-1 rounded-full bg-card/80 p-1 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100 [@media(hover:none)]:opacity-100"
-            onClick={(event) => event.stopPropagation()}
-          >
-            {remove.isPending ? (
-              <span className="flex h-6 w-6 items-center justify-center">
-                <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
-              </span>
-            ) : confirming ? (
-              <>
-                <button
-                  type="button"
-                  aria-label="Confirm delete"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    remove.mutate(item.id);
-                  }}
-                  className="flex h-6 w-6 items-center justify-center rounded-full text-emerald-400 hover:bg-emerald-400/10"
-                >
-                  <Check className="h-3.5 w-3.5" />
-                </button>
-                <button
-                  type="button"
-                  aria-label="Cancel delete"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setConfirming(false);
-                  }}
-                  className="flex h-6 w-6 items-center justify-center rounded-full text-muted-foreground hover:bg-secondary"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              </>
-            ) : (
-              <button
-                type="button"
-                aria-label="Delete post"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setConfirming(true);
-                }}
-                className="flex h-6 w-6 items-center justify-center rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
-            )}
-          </div>
+          <MultipleBadge post={score} className="absolute bottom-2 left-2 bg-black/70 backdrop-blur" />
+          <span className="absolute left-2 top-2 rounded bg-black/60 px-1.5 py-0.5 font-mono text-[10px] text-white">
+            {isReel(item) ? "REEL" : item.media_type === "CAROUSEL_ALBUM" ? "CAROUSEL" : "POST"}
+          </span>
+
         </div>
 
         <div className="space-y-2 p-3">
           <p className="line-clamp-2 text-sm">{item.caption || "No caption"}</p>
 
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <div className="flex items-center gap-3 font-mono text-xs text-muted-foreground">
+            {item.view_count != null && (
+              <span className="inline-flex items-center gap-1">
+                <Eye className="h-3 w-3" />
+                {formatNumber(item.view_count)}
+              </span>
+            )}
             <span className="inline-flex items-center gap-1">
               <Heart className="h-3 w-3" />
               {formatNumber(item.like_count)}
@@ -119,6 +83,18 @@ export default function MediaCard({ item }) {
               <MessageCircle className="h-3 w-3" />
               {formatNumber(item.comments_count)}
             </span>
+            {item.shares_count != null && (
+              <span className="inline-flex items-center gap-1">
+                <Send className="h-3 w-3" />
+                {formatNumber(item.shares_count)}
+              </span>
+            )}
+            {item.saved_count != null && (
+              <span className="inline-flex items-center gap-1">
+                <Bookmark className="h-3 w-3" />
+                {formatNumber(item.saved_count)}
+              </span>
+            )}
             {dateLabel && <span className="ml-auto">{dateLabel}</span>}
           </div>
 
@@ -148,7 +124,7 @@ export default function MediaCard({ item }) {
         </div>
       </article>
 
-      {open && <MediaDetailDialog item={item} onClose={() => setOpen(false)} />}
+      {open && <MediaDetailDialog item={item} score={score} onClose={() => setOpen(false)} />}
     </>
   );
 }

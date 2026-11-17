@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/db";
 
 export function useToggleMilestone(overrides = {}) {
   const queryClient = useQueryClient();
@@ -7,7 +7,7 @@ export function useToggleMilestone(overrides = {}) {
   return useMutation({
     mutationFn: async ({ label, done }) => {
       const milestone_overrides = { ...overrides, [label]: done };
-      await base44.auth.updateMe({ milestone_overrides });
+      await api.auth.updateMe({ milestone_overrides });
       return milestone_overrides;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["me"] }),

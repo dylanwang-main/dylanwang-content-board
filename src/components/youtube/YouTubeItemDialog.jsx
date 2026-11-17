@@ -52,17 +52,17 @@ export default function YouTubeItemDialog({ item, onClose }) {
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[92vh] w-[calc(100vw-1.5rem)] max-w-4xl overflow-y-auto rounded-2xl">
+      <DialogContent className="max-h-[92vh] w-[calc(100vw-1.5rem)] max-w-4xl overflow-y-auto rounded-lg">
         <DialogHeader>
-          <DialogTitle className="text-[11px] font-medium uppercase tracking-[0.18em] text-primary">
+          <DialogTitle className="text-[11px] font-medium text-primary">
             YouTube plan
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 rounded-2xl border border-border/70 p-4">
+        <div className="space-y-4 rounded-lg border border-border/70 p-4">
           <Field label="Title">
             <Input
-              className="rounded-xl"
+              className="rounded-lg"
               value={form.title}
               onChange={(event) => set("title", event.target.value)}
             />
@@ -80,7 +80,7 @@ export default function YouTubeItemDialog({ item, onClose }) {
               <Field label="Scheduled for">
                 <Input
                   type="date"
-                  className="rounded-xl"
+                  className="rounded-lg"
                   value={form.scheduled_date}
                   onChange={(event) => set("scheduled_date", event.target.value)}
                 />
@@ -91,7 +91,7 @@ export default function YouTubeItemDialog({ item, onClose }) {
               <Field label="Published on">
                 <Input
                   type="date"
-                  className="rounded-xl"
+                  className="rounded-lg"
                   value={form.published_date}
                   onChange={(event) => set("published_date", event.target.value)}
                 />

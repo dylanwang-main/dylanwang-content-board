@@ -29,7 +29,7 @@ export default function Research() {
       <PageHeader
         eyebrow="Content Research"
         title="Know your audience"
-        description="Research your page or a competitor's to uncover customer insights, avatars and ranked angles. Your latest research feeds your Content College AI Brain."
+        description="Research your page or a competitor's to uncover customer insights, avatars and ranked angles. Your latest research feeds your Brain."
       />
 
       <Panel>

@@ -33,7 +33,7 @@ export default function PageScannerForm({ onStarted }) {
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-3xl border border-border/60 bg-card/80 p-6 shadow-xl shadow-black/5"
+      className="rounded-lg border border-border/60 bg-card/80 p-6"
     >
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -71,7 +71,7 @@ export default function PageScannerForm({ onStarted }) {
 
         <Field label="Page link or handle">
           <Input
-            className="rounded-xl"
+            className="rounded-lg"
             value={source}
             onChange={(event) => setSource(event.target.value)}
             placeholder="e.g. instagram.com/yourhandle"

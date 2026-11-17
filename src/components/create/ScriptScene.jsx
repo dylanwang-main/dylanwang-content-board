@@ -11,9 +11,9 @@ export default function ScriptScene({ scene, number }) {
   ].filter((row) => row.value);
 
   return (
-    <div className="rounded-xl bg-background/40 p-4">
+    <div className="rounded-lg bg-background/40 p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="text-xs font-semibold text-muted-foreground">
           {heading}
         </p>
 
@@ -28,7 +28,7 @@ export default function ScriptScene({ scene, number }) {
         <div className="mt-3 grid gap-3 sm:grid-cols-[110px_1fr]">
           {rows.map((row) => (
             <Fragment key={row.label}>
-              <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 {row.label}
               </p>
               <p className={`text-sm ${row.tone}`}>{row.value}</p>

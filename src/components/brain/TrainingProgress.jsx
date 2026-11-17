@@ -2,9 +2,9 @@ export default function TrainingProgress({ trained = 0, total = 7, learnedCount 
   const percent = total > 0 ? (trained / total) * 100 : 0;
 
   return (
-    <section className="rounded-2xl border border-border/60 bg-card p-5">
+    <section className="rounded-lg border border-border/60 bg-card p-5">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="text-[10px] font-medium text-muted-foreground">
           Training
         </p>
         <p className="text-xs text-muted-foreground">

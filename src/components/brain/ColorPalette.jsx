@@ -3,7 +3,7 @@ import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function ColorPalette({ value = [], onChange }) {
-  const [picked, setPicked] = useState("#D4AF37");
+  const [picked, setPicked] = useState("#2F5D46");
 
   const add = () => {
     const color = picked.toUpperCase();
@@ -17,7 +17,7 @@ export default function ColorPalette({ value = [], onChange }) {
           {value.map((color) => (
             <div key={color} className="w-16">
               <div
-                className="group relative h-16 w-16 rounded-2xl ring-1 ring-border/60"
+                className="group relative h-16 w-16 rounded-lg ring-1 ring-border/60"
                 style={{ backgroundColor: color }}
               >
                 <button
@@ -29,7 +29,7 @@ export default function ColorPalette({ value = [], onChange }) {
                   <X className="h-3 w-3" />
                 </button>
               </div>
-              <p className="mt-1.5 text-center text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+              <p className="mt-1.5 text-center text-[10px] text-muted-foreground">
                 {color}
               </p>
             </div>
@@ -37,7 +37,7 @@ export default function ColorPalette({ value = [], onChange }) {
         </div>
       )}
 
-      <div className="flex items-center gap-3 rounded-2xl border border-dashed border-border p-3">
+      <div className="flex items-center gap-3 rounded-lg border border-dashed border-border p-3">
         <input
           type="color"
           value={picked}

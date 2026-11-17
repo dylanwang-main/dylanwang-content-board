@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export default function EmptyState({ icon: Icon, title, text, actionLabel, actionTo }) {
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-dashed border-border px-6 py-16 text-center">
+    <div className="flex flex-col items-center rounded-lg border border-dashed border-border px-6 py-16 text-center">
       {Icon && (
         <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-accent">
           <Icon className="h-5 w-5 text-primary" strokeWidth={1.5} />
