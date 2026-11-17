@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider } from '@/lib/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
+import Analysis from '@/pages/Analysis';
 import TikTokCallback from '@/pages/TikTokCallback';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import AppLayout from '@/components/AppLayout';
@@ -48,6 +49,7 @@ const AppRoutes = () => {
           <Route path="/youtube" element={<YouTube />} />
           <Route path="/outliers" element={<Outliers />} />
           <Route path="/performance" element={<Performance />} />
+          <Route path="/analysis" element={<Analysis />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
 

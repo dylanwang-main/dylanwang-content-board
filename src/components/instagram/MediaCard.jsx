@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/content";
 import { useAnalyzeInstagramMedia } from "@/hooks/useInstagram";
 import { isReel } from "@/lib/mediaFilters";
+import { MultipleBadge } from "@/pages/Analysis";
 
 const STATUS_PILLS = {
   synced: "bg-muted text-muted-foreground",
@@ -29,7 +30,7 @@ const STATUS_LABELS = {
   failed: "Failed",
 };
 
-export default function MediaCard({ item }) {
+export default function MediaCard({ item, score }) {
   const analyze = useAnalyzeInstagramMedia();
   const [open, setOpen] = useState(false);
 
@@ -57,6 +58,7 @@ export default function MediaCard({ item }) {
             </div>
           )}
 
+          <MultipleBadge post={score} className="absolute bottom-2 left-2 bg-black/70 backdrop-blur" />
           <span className="absolute left-2 top-2 rounded bg-black/60 px-1.5 py-0.5 font-mono text-[10px] text-white">
             {isReel(item) ? "REEL" : item.media_type === "CAROUSEL_ALBUM" ? "CAROUSEL" : "POST"}
           </span>
@@ -122,7 +124,7 @@ export default function MediaCard({ item }) {
         </div>
       </article>
 
-      {open && <MediaDetailDialog item={item} onClose={() => setOpen(false)} />}
+      {open && <MediaDetailDialog item={item} score={score} onClose={() => setOpen(false)} />}
     </>
   );
 }

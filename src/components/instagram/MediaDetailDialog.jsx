@@ -50,7 +50,7 @@ function Stats({ item }) {
 }
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
-export default function MediaDetailDialog({ item, onClose }) {
+export default function MediaDetailDialog({ item, score, onClose }) {
   const analyzed = item.status === "analyzed";
 
   return (
@@ -83,6 +83,13 @@ export default function MediaDetailDialog({ item, onClose }) {
           </a>
         )}
 
+        {score?.multiple != null && (
+          <p className="mt-4 text-sm">
+            <span className="font-mono text-primary">{score.multiple >= 10 ? Math.round(score.multiple) : score.multiple.toFixed(1)}x</span>{" "}
+            your median {score.metric} ({formatNumber(score[score.metric])} vs {formatNumber(score.median)} for your last 30{" "}
+            {score.trial ? "trial/hidden reels" : score.kind === "reel" ? "reels" : "posts"}).
+          </p>
+        )}
         <Stats item={item} />
 
         <p className="mt-4 whitespace-pre-wrap break-words text-sm leading-relaxed text-foreground/90">

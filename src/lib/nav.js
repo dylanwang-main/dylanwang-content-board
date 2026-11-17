@@ -1,4 +1,4 @@
-import { Brain, ChartNoAxesCombined, FileSearch, Home, Instagram, Library, Music2, PenLine, Settings2, TrendingUp, Youtube } from "lucide-react";
+import { Brain, ChartNoAxesCombined, LineChart, FileSearch, Home, Instagram, Library, Music2, PenLine, Settings2, TrendingUp, Youtube } from "lucide-react";
 
 // Sidebar items, in groups. Instagram and TikTok pages still exist but are
 // left out of the menu while their sync is off.
@@ -22,6 +22,7 @@ export const NAV_GROUPS = [
   {
     label: "Insights",
     items: [
+      { to: "/analysis", label: "Analysis", short: "Analysis", icon: LineChart },
       { to: "/outliers", label: "Outliers", short: "Outliers", icon: TrendingUp },
       { to: "/performance", label: "Performance", short: "Stats", icon: ChartNoAxesCombined },
     ],

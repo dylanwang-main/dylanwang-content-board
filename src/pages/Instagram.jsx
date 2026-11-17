@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Camera, RefreshCw, TrendingUp } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import StatCard from "@/components/kit/StatCard";
 import MediaCard from "@/components/instagram/MediaCard";
 import MediaFilters from "@/components/instagram/MediaFilters";
 import { filterAndSortMedia } from "@/lib/mediaFilters";
+import { fromInstagram, scorePosts } from "@/lib/analysis";
 import DateRangeFilter from "@/components/shared/DateRangeFilter";
 import { Button } from "@/components/ui/button";
 import { useInstagramMedia, useSyncInstagram } from "@/hooks/useInstagram";
@@ -59,6 +60,13 @@ export default function Instagram() {
       // Storage unavailable: filters just won't be remembered.
     }
   }, [filters.type, filters.sort, filters.hideTrials]);
+
+  // Score every post against its own pool (reels vs posts, trials vs live).
+  const scores = useMemo(() => {
+    const map = new Map();
+    scorePosts(media.map(fromInstagram)).forEach((p) => map.set(p.id, p));
+    return map;
+  }, [media]);
 
   const inRange = media.filter((item) => inDateRange(item.timestamp, dateRange));
   const filtered = filterAndSortMedia(inRange, filters);
@@ -133,7 +141,7 @@ export default function Instagram() {
           ) : (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
               {filtered.map((item) => (
-                <MediaCard key={item.id} item={item} />
+                <MediaCard key={item.id} item={item} score={scores.get(item.id)} />
               ))}
             </div>
           )}
