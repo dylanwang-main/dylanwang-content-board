@@ -92,8 +92,15 @@ export default function YouTubeVideoCard({ video }) {
           <span className="text-[11px] text-muted-foreground">
             {dateLabel(video.published_at)}
           </span>
-          <span className="rounded-full bg-accent px-2 py-0.5 text-[11px] text-accent-foreground">
-            {video.format === "long_form" ? "Long form" : "Short"}
+          <span className="flex items-center gap-1.5">
+            {(video.privacy_status === "unlisted" || video.privacy_status === "private") && (
+              <span className="rounded-full border border-border px-2 py-0.5 text-[11px] capitalize text-muted-foreground">
+                {video.privacy_status}
+              </span>
+            )}
+            <span className="rounded-full bg-accent px-2 py-0.5 text-[11px] text-accent-foreground">
+              {video.format === "long_form" ? "Long form" : "Short"}
+            </span>
           </span>
         </div>
 

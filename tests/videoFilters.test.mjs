@@ -35,3 +35,13 @@ test('does not mutate the input list', () => {
   filterAndSortVideos(videos, { sort: 'views' });
   assert.deepEqual(ids(videos), before);
 });
+
+test('visibility filter matches privacy_status', () => {
+  const list = [
+    { id: 'p', privacy_status: 'public', published_at: '2026-01-03' },
+    { id: 'u', privacy_status: 'unlisted', published_at: '2026-01-02' },
+    { id: 'x', privacy_status: 'private', published_at: '2026-01-01' },
+  ];
+  assert.deepEqual(ids(filterAndSortVideos(list, { visibility: 'unlisted' })), ['u']);
+  assert.deepEqual(ids(filterAndSortVideos(list, { visibility: 'all' })), ['p', 'u', 'x']);
+});

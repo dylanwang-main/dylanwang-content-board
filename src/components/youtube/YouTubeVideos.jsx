@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Link } from "react-router-dom";
 import { format, parseISO } from "date-fns";
-import { Loader2, RefreshCw, Youtube } from "lucide-react";
+import { Link2, Loader2, RefreshCw, Youtube } from "lucide-react";
 import EmptyState from "@/components/kit/EmptyState";
 import PageLoader from "@/components/kit/PageLoader";
 import StatCard from "@/components/kit/StatCard";
@@ -9,6 +9,7 @@ import DateRangeFilter from "@/components/shared/DateRangeFilter";
 import YouTubeVideoCard from "@/components/youtube/YouTubeVideoCard";
 import VideoFilters from "@/components/youtube/VideoFilters";
 import { filterAndSortVideos } from "@/lib/videoFilters";
+import { connectYouTubeAccount, disconnectYouTubeAccount, getYouTubeAccessToken } from "@/lib/googleAuth";
 import { Button } from "@/components/ui/button";
 import { useMe } from "@/hooks/useCreatorData";
 import { useSocialAccounts } from "@/hooks/useSocialAccounts";
@@ -17,17 +18,22 @@ import { formatNumber } from "@/lib/content";
 import { inDateRange } from "@/lib/dateRange";
 
 const FILTERS_KEY = "cc.youtubeFilters";
-const DEFAULT_FILTERS = { query: "", format: "all", sort: "newest" };
+const DEFAULT_FILTERS = { query: "", format: "all", visibility: "all", sort: "newest" };
 
 // Format and sort are remembered between visits; search starts empty.
 function loadFilters() {
   try {
     const saved = JSON.parse(localStorage.getItem(FILTERS_KEY) || "{}");
-    return { ...DEFAULT_FILTERS, format: saved.format || "all", sort: saved.sort || "newest" };
+    return { ...DEFAULT_FILTERS, format: saved.format || "all", visibility: saved.visibility || "all", sort: saved.sort || "newest" };
   } catch {
     return DEFAULT_FILTERS;
   }
 }
+
+const subscribeKeys = (cb) => {
+  window.addEventListener("cc-keys-changed", cb);
+  return () => window.removeEventListener("cc-keys-changed", cb);
+};
 
 function syncedLabel(value) {
   if (!value) return null;
@@ -42,14 +48,29 @@ export default function YouTubeVideos() {
   const sync = useSyncYouTube();
   const [dateRange, setDateRange] = useState("all");
   const [filters, setFilters] = useState(loadFilters);
+  const connected = Boolean(useSyncExternalStore(subscribeKeys, getYouTubeAccessToken));
+  const [connectError, setConnectError] = useState("");
+
+  const connect = async () => {
+    setConnectError("");
+    try {
+      await connectYouTubeAccount();
+      sync.mutate({ handle });
+    } catch (err) {
+      setConnectError(err.message);
+    }
+  };
 
   useEffect(() => {
     try {
-      localStorage.setItem(FILTERS_KEY, JSON.stringify({ format: filters.format, sort: filters.sort }));
+      localStorage.setItem(
+        FILTERS_KEY,
+        JSON.stringify({ format: filters.format, visibility: filters.visibility, sort: filters.sort }),
+      );
     } catch {
       // Storage unavailable: filters just won't be remembered.
     }
-  }, [filters.format, filters.sort]);
+  }, [filters.format, filters.visibility, filters.sort]);
 
   const inRange = videos.filter((video) => inDateRange(video.published_at, dateRange));
   const filtered = filterAndSortVideos(inRange, filters);
@@ -63,7 +84,13 @@ export default function YouTubeVideos() {
       <DateRangeFilter value={dateRange} onChange={setDateRange} />
 
       {videos.length > 0 && (
-        <VideoFilters value={filters} onChange={setFilters} shown={filtered.length} total={inRange.length} />
+        <VideoFilters
+          value={filters}
+          onChange={setFilters}
+          shown={filtered.length}
+          total={inRange.length}
+          showVisibility={videos.some((v) => v.privacy_status && v.privacy_status !== "public")}
+        />
       )}
 
       <section className="grid grid-cols-2 gap-4 sm:grid-cols-3">
@@ -78,7 +105,18 @@ export default function YouTubeVideos() {
           {lastSynced ? ` · Last synced ${lastSynced}` : ""}
         </p>
 
-        {handle ? (
+        <div className="flex flex-wrap items-center gap-2">
+          {connected ? (
+            <Button variant="ghost" className="rounded-full text-muted-foreground" onClick={disconnectYouTubeAccount}>
+              Disconnect Google
+            </Button>
+          ) : (
+            <Button variant="outline" className="rounded-full" onClick={connect} disabled={sync.isPending}>
+              <Link2 />
+              Connect YouTube account
+            </Button>
+          )}
+        {handle || connected ? (
           <Button
             variant="outline"
             className="rounded-full"
@@ -101,7 +139,15 @@ export default function YouTubeVideos() {
             first.
           </p>
         )}
+        </div>
       </div>
+
+      <p className="text-xs text-muted-foreground">
+        {connected
+          ? "Connected to your Google account: syncs include unlisted and private videos."
+          : "Syncing with an API key shows public videos only. Connect your YouTube account to include unlisted and private ones."}
+      </p>
+      {connectError && <p className="text-sm text-destructive">{connectError}</p>}
 
       {sync.isError && <p className="text-sm text-destructive">{sync.error.message}</p>}
 
