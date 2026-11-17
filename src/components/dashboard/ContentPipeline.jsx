@@ -1,6 +1,5 @@
 import { useState } from "react";
 import FieldSelect from "@/components/kit/FieldSelect";
-import Panel from "@/components/kit/Panel";
 import PipelineBoard from "@/components/dashboard/PipelineBoard";
 
 export default function ContentPipeline({ items = [], onOpenItem }) {
@@ -22,11 +21,13 @@ export default function ContentPipeline({ items = [], onOpenItem }) {
       : items.filter((item) => (item.platform || "").toLowerCase() === platform.toLowerCase());
 
   return (
-    <Panel
-      title="Content pipeline"
-      action={<p className="text-xs text-muted-foreground">Drag cards between stages</p>}
-    >
-      <div className="mb-5 max-w-xs">
+    <section aria-label="Pipeline">
+      <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="text-[13px] font-semibold text-muted-foreground">Pipeline</h2>
+          <p className="mt-0.5 text-xs text-muted-foreground/80">Drag cards between stages</p>
+        </div>
+        <div className="w-44">
         <FieldSelect
           label="Platform"
           value={platform}
@@ -36,9 +37,10 @@ export default function ContentPipeline({ items = [], onOpenItem }) {
             ...platforms.map((name) => ({ value: name, label: name })),
           ]}
         />
+        </div>
       </div>
 
       <PipelineBoard items={visibleItems} onOpenItem={onOpenItem} />
-    </Panel>
+    </section>
   );
 }

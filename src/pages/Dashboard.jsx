@@ -74,6 +74,7 @@ export default function Dashboard() {
 
       <Milestones
         items={items}
+        videos={videos}
         brainFiles={brainFiles}
         research={research}
         publishedThisMonth={publishedThisMonth}
