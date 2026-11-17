@@ -1,6 +1,6 @@
 import PageHeader from "@/components/kit/PageHeader";
 import PageLoader from "@/components/kit/PageLoader";
-import ConnectedChannels from "@/components/settings/ConnectedChannels";
+import ChannelsSection from "@/components/settings/ChannelsSection";
 import SettingsForm from "@/components/settings/SettingsForm";
 import AiKeysCard from "@/components/settings/AiKeysCard";
 import { useMe } from "@/hooks/useCreatorData";
@@ -24,9 +24,9 @@ export default function Settings() {
         <PageLoader />
       ) : (
         <div className="mx-auto max-w-3xl space-y-6">
-          <SettingsForm me={me} />
+          <ChannelsSection />
           <AiKeysCard />
-          <ConnectedChannels />
+          <SettingsForm me={me} />
           <div className="flex items-center justify-between rounded-lg border border-border/70 bg-card/70 p-6">
             <p className="text-sm text-muted-foreground">
               {isGuest ? (

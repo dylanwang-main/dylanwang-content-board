@@ -145,7 +145,7 @@ export default function PlanSections({ plan }) {
       <Panel title="Competitors">
         {competitors.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No competitor data. Add a YouTube Data API key in Settings to include competitor research.
+            No competitor data. Connect YouTube in Settings to include competitor research.
           </p>
         ) : (
           <div className="space-y-4">

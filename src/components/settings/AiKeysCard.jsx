@@ -3,7 +3,7 @@ import { Eye, EyeOff, KeyRound, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Field from "@/components/kit/Field";
-import { getAnthropicKey, getYouTubeKey, setAnthropicKey, setYouTubeKey } from "@/ai/keys";
+import { getAnthropicKey, setAnthropicKey } from "@/ai/keys";
 
 const subscribe = (cb) => {
   window.addEventListener("cc-keys-changed", cb);
@@ -71,7 +71,7 @@ function KeyField({ label, hint, placeholder, getKey, setKey }) {
   );
 }
 
-// API keys for real AI and YouTube sync. Stored only in this browser.
+// Claude API key for real AI. Stored only in this browser.
 export default function AiKeysCard() {
   const live = Boolean(useSyncExternalStore(subscribe, getAnthropicKey));
 
@@ -79,10 +79,9 @@ export default function AiKeysCard() {
     <section className="space-y-5 rounded-lg border border-border/70 bg-card/70 p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-[18px] font-semibold">AI and API keys</h2>
+          <h2 className="text-[15px] font-semibold">AI</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Keys stay in this browser and go straight to Anthropic or Google. They are never sent to this app's
-            servers.
+            Your Claude key stays in this browser and goes straight to Anthropic, never to this app's servers.
           </p>
         </div>
         <span
@@ -108,13 +107,6 @@ export default function AiKeysCard() {
         placeholder="sk-ant-..."
         getKey={getAnthropicKey}
         setKey={setAnthropicKey}
-      />
-      <KeyField
-        label="YouTube Data API key (optional)"
-        hint="From Google Cloud. Enables YouTube channel sync and title research."
-        placeholder="AIza..."
-        getKey={getYouTubeKey}
-        setKey={setYouTubeKey}
       />
     </section>
   );
